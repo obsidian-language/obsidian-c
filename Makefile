@@ -2,6 +2,10 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c17 -Iinclude
 LDFLAGS =
 
+ifeq ($(OS),Windows_NT)
+	LDFLAGS += -static
+endif
+
 SRC_DIR = src
 BIN_DIR = bin
 OBJ_DIR = obj
@@ -34,9 +38,5 @@ clean:
 
 run: $(TARGET)
 	./$(TARGET)
-
-install: $(TARGET)
-	install -d /usr/local/bin
-	install -m 755 $(TARGET) /usr/local/bin/
 
 .PHONY: all clean run
