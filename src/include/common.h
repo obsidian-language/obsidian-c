@@ -13,5 +13,6 @@ void printOptimizersHelp(void);
 void printTargetHelp(void);
 void printWarningsHelp(void);
 void systemInfo(char *output, size_t size);
+char *strdup(const char *s);
 
 #endif // COMMON_H

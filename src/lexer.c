@@ -58,9 +58,12 @@ Token getNextToken(Lexer *lexer) {
         case ':': token.type = Colon;    break;
         case ';': token.type = Semi;     break;
         case ',': token.type = Comma;    break;
+        case '?': token.type = Question; break;
+        case '%': token.type = Percent;  break;
+        case '^': token.type = matchNext('^', Xor, Carot); break;
         case '+': token.type = matchNext('+', Increment, matchNext('=', PlusAssign, Plus)); break;
         case '-': token.type = matchNext('-', Decrement, matchNext('=', MinusAssign, Minus)); break;
-        case '*': token.type = matchNext('=', StarAssign, Star); break;
+        case '*': token.type = matchNext('=', StarAssign, matchNext('*', Power, Star)); break;
         case '/': token.type = matchNext('=', SlashAssign, Slash); break;
         case '!': token.type = matchNext('=', NotEqual, Not); break;
         case '=': token.type = matchNext('=', Equal, Assign); break;

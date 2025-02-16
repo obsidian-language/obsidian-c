@@ -1,5 +1,6 @@
 #include "include/common.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #if defined (_WIN32)  || defined(_WIN64)
@@ -60,4 +61,13 @@ void systemInfo(char *output, size_t size) {
         }
     #endif
     output[size - 1] = '\0';
+}
+
+char *strdup(const char *s) {
+    size_t len = strlen(s) + 1;
+    char *copy = malloc(len);
+    if (copy) {
+        memcpy(copy, s, len);
+    }
+    return copy;
 }
