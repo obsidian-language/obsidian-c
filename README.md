@@ -1,11 +1,11 @@
-# Obsidian Language: **An experimental language**
+# Obsidian Language: **An Experimental Language**
 
 <p align="right">
   <a href="#why-build-obsidian">Why?</a> |
   <a href="#language-goals">Goals</a> |
   <a href="#project-status">Status</a> |
-  <a href="#getting-started">Getting started</a> |
-  <a href="#join-us">Join us</a>
+  <a href="#getting-started">Getting Started</a> |
+  <a href="#join-us">Join Us</a>
 </p>
 
 <a href="docs/snippets.md#fib">
@@ -28,11 +28,11 @@
   - An inclusive, friendly, and open community.
   - Comprehensive toolset: compiler, libraries, documentation, package manager, and more.
 
-## Why build Obsidian?
+## Why Build Obsidian?
 
-C++ is the go-to language for high-performance applications, but it's burdened with decades of technical debt, making improvements difficult. We believe that starting fresh with a new language—without the legacy baggage of C/C++—is the best way to overcome these challenges. Obsidian aims to offer a language with clean syntax, modular design, and modern features that make the transition from C++ easier without sacrificing performance.
+C++ has long been the standard for high-performance applications, but its extensive history has introduced significant technical debt, complicating further advancements. We believe that creating a new language from the ground up—free from the legacy constraints of C/C++—is the optimal solution to these issues. Obsidian is designed to provide a language with a clean syntax, modular architecture, and contemporary features, facilitating a smoother transition from C++ without compromising on performance.
 
-Obsidian isn't meant to replace modern languages like Go, Swift, or Rust; it's meant for cases where migrating away from C++ is not feasible due to design or performance reasons.
+Obsidian is not intended to replace modern languages like Go, Swift, or Rust; rather, it is tailored for scenarios where moving away from C++ is impractical due to design or performance constraints.
 
 ## Language Goals
 
@@ -117,41 +117,36 @@ echo "fn main() int { println(42); return 0; }" > forty_two.ob
 
 Note: This is a very early-stage release, and many features are still in development. Check out our [0.1 milestone](/docs/project/milestones.md) for upcoming improvements.
 
-For those interested in building from source or contributing, follow the setup instructions:
+### Building from Source
+
+For those interested in building Obsidian from source or contributing to its development, follow these setup instructions:
+
 ```shell
+# Clone the repository
 git clone https://github.com/obsidian-language/obsidian.git
 
+# Navigate to the project directory
 cd obsidian
 
+# Build the project
 make
 ```
 
-## Join us
+This will clone the Obsidian repository, navigate to the project directory, and build the project using `make`. Ensure you have the necessary build tools installed on your system. For more detailed instructions, refer to our [contributing guidelines](CONTRIBUTING.md).
 
-We'd love to have folks join us and contribute to the project. Obsidian is
-committed to a welcoming and inclusive environment where everyone can
-contribute.
+## Join Us
 
--   Most of Obsidian's design discussions occur on
-    [Discord](https://discord.gg/#).
--   To watch for major release announcements, subscribe to our
-    [Obsidian release post on GitHub](#)
-    and [star Obsidian-lang](https://github.com/obsidian-language/obsidian).
--   See our [code of conduct](CODE_OF_CONDUCT.md) and
-    [contributing guidelines](CONTRIBUTING.md) for information about the Obsidian
-    development community.
+We'd love to have folks join us and contribute to the project. Obsidian is committed to a welcoming and inclusive environment where everyone can contribute.
+
+- Most of Obsidian's design discussions occur on [Discord](https://discord.gg/#).
+- To watch for major release announcements, subscribe to our [Obsidian release post on GitHub](#) and [star Obsidian-lang](https://github.com/obsidian-language/obsidian).
+- See our [code of conduct](CODE_OF_CONDUCT.md) and [contributing guidelines](CONTRIBUTING.md) for information about the Obsidian development community.
 
 ### Contributing
 
 You can also directly:
 
--   [Contribute to the language design](CONTRIBUTING.md#contributing-to-the-language-design):
-    feedback on design, new design proposal
--   [Contribute to the language implementation](CONTRIBUTING.md#contributing-to-the-language-implementation)
-    -   [Obsidian Toolchain](/lib/), and project infrastructure
+- [Contribute to the language design](CONTRIBUTING.md#contributing-to-the-language-design): feedback on design, new design proposals.
+- [Contribute to the language implementation](CONTRIBUTING.md#contributing-to-the-language-implementation): [Obsidian Toolchain](/lib/), and project infrastructure.
 
-You can **check out some
-["good first issues"](https://github.com/obsidian-language/obsidian/labels/good%20first%20issue)**,
-or join the `#contributing-help` channel on
-[Discord](https://discord.gg/#). See our full
-[`CONTRIBUTING`](CONTRIBUTING.md) documentation for more details.
+You can **check out some ["good first issues"](https://github.com/obsidian-language/obsidian/labels/good%20first%20issue)**, or join the `#contributing-help` channel on [Discord](https://discord.gg/#). See our full [`CONTRIBUTING`](CONTRIBUTING.md) documentation for more details.
