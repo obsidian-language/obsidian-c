@@ -22,8 +22,6 @@ TokenKind checkKeyword(const char *start, int length) {
             if (strcmp(keywords[i], "while") == 0) return While;
             if (strcmp(keywords[i], "for") == 0) return For;
             if (strcmp(keywords[i], "return") == 0) return Return;
-            if (strcmp(keywords[i], "int") == 0) return Int;
-            if (strcmp(keywords[i], "float") == 0) return Float;
             if (strcmp(keywords[i], "char") == 0) return Char;
             if (strcmp(keywords[i], "void") == 0) return Void;
             if (strcmp(keywords[i], "const") == 0) return Const;
@@ -49,8 +47,16 @@ TokenKind checkKeyword(const char *start, int length) {
             if (strcmp(keywords[i], "println") == 0) return Println;
             if (strcmp(keywords[i], "length") == 0) return Length;
             if (strcmp(keywords[i], "break") == 0) return Break;
-            if (strcmp(keywords[i], "int") == 0) return Int;
-            if (strcmp(keywords[i], "float") == 0) return Float;
+            if (strcmp(keywords[i], "i8") == 0) return I8;
+            if (strcmp(keywords[i], "i16") == 0) return I16;
+            if (strcmp(keywords[i], "i32") == 0) return I32;
+            if (strcmp(keywords[i], "i64") == 0) return I64;
+            if (strcmp(keywords[i], "f32") == 0) return F32;
+            if (strcmp(keywords[i], "f64") == 0) return F64;
+            if (strcmp(keywords[i], "u8") == 0) return U8;
+            if (strcmp(keywords[i], "u16") == 0) return U16;
+            if (strcmp(keywords[i], "u32") == 0) return U32;
+            if (strcmp(keywords[i], "u64") == 0) return U64;
             if (strcmp(keywords[i], "string") == 0) return String;
             if (strcmp(keywords[i], "char") == 0) return Char;
             if (strcmp(keywords[i], "bool") == 0) return Bool;

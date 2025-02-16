@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     const char *source = argv[1];
     FILE *file = fopen(source, "r");
     if (file == NULL) {
-        fprintf(stderr, "obsidian: error: could not open file '%s'\n", source);
+        fprintf(stderr, "obsidian: error: no input file\n");
         return EXIT_FAILURE;
     }
 
