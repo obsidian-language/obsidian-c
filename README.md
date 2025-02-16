@@ -100,7 +100,7 @@ Obsidian is in early development, with nightly releases of the toolchain availab
 
 ```shell
 # Get the release
-wget https://github.com/obsidian-language/obsidian-lang/releases/download/v${VERSION}/obsidian-${OS}-${ARCH}.tar.gz
+wget https://github.com/obsidian-language/obsidian/releases/download/v${VERSION}/obsidian-${OS}-${ARCH}.tar.gz
 
 # Unpack the toolchain:
 tar -xvf obsidian-${OS}-${ARCH}.tar.gz
@@ -119,53 +119,11 @@ Note: This is a very early-stage release, and many features are still in develop
 
 For those interested in building from source or contributing, follow the setup instructions:
 ```shell
-bash -c "sh <(curl -fsSL https://opam.ocaml.org/install.sh)"
-
-opam init
-
-eval $(opam env)
-
-opam switch create 4.14.2
-
-eval $(opam env)
-
-opam install odoc ppx_deriving llvm.14.0.6 dune menhir
-
-<package manager> llvm14
-
 git clone https://github.com/obsidian-language/obsidian.git
 
 cd obsidian
 
-dune build
-```
-
-⚠️ UNSUPPORTED: For windows:
-```
-winget install Git.Git OCaml.opam
-
-opam init
-
-POWERSHELL:
-(& opam env) -split '\r?\n' | ForEach-Object { Invoke-Expression $_ }
-
-CMD:
-for /f "tokens=*" %i in ('opam env') do @%i
-
-opam switch create 4.14.2
-
-POWERSHELL:
-(& opam env) -split '\r?\n' | ForEach-Object { Invoke-Expression $_ }
-
-CMD:
-for /f "tokens=*" %i in ('opam env') do @%i
-
-opam install ocaml-lsp-server odoc ocamlformat utop ppx_deriving llvm.14.0.6 dune menhir
-```
-
-For those who just want the executable:
-```shell
-curl -fsSL https://raw.githubusercontent.com/obsidian-language/ember/refs/heads/main/ember | bash
+make
 ```
 
 ## Join us
