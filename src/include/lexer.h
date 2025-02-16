@@ -21,6 +21,11 @@ typedef struct {
     int line, column;
 } Lexer;
 
+typedef struct {
+    const char *keyword;
+    TokenKind token;
+} KeywordEntry;
+
 void initLexer(Lexer *lexer, char *source);
 
 Token getNextToken(Lexer *lexer);

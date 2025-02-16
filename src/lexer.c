@@ -3,8 +3,17 @@
 #include <ctype.h>
 #include <string.h>
 
-const char *keywords[] = {
-    "if", "else", "while", "for", "return", "int", "float", "char", "void", "const", "fn", "switch", "case", "default", "struct", "enum", "new", "null", "true", "false", "alloc", "dealloc", "unsafe", "sizeof", "private", "typeof", "import", "export", "cast", "println", "length", "break", "int", "float", "string", "char", "bool", "void"
+#define KEYWORD_COUNT (sizeof(keywords) / sizeof(keywords[0]))
+
+static const KeywordEntry keywords[] = {
+    {"if", If}, {"else", Else}, {"while", While}, {"for", For}, {"return", Return}, {"const", Const},
+    {"fn", Fn}, {"switch", Switch}, {"case", Case}, {"default", Default}, {"struct", Struct},
+    {"enum", Enum}, {"new", New}, {"null", Null}, {"true", True}, {"false", False},
+    {"alloc", Alloc}, {"dealloc", Dealloc}, {"unsafe", Unsafe}, {"sizeof", Sizeof},
+    {"private", Private}, {"typeof", Typeof}, {"import", Import}, {"export", Export},
+    {"cast", Cast}, {"println", Println}, {"length", Length}, {"break", Break},
+    {"i8", I8}, {"i16", I16}, {"i32", I32}, {"i64", I64}, {"f32", F32}, {"f64", F64},
+    {"u8", U8}, {"u16", U16}, {"u32", U32}, {"u64", U64}, {"string", String}, {"bool", Bool}, {"void", Void}, {"char", Char}
 };
 
 void initLexer(Lexer *lexer, char *source) {
@@ -15,206 +24,57 @@ void initLexer(Lexer *lexer, char *source) {
 }
 
 TokenKind checkKeyword(const char *start, int length) {
-    for (size_t i = 0; i < sizeof(keywords) / sizeof(keywords[0]); i++) {
-        if (strncmp(start, keywords[i], length) == 0 && keywords[i][length] == '\0') {
-            if (strcmp(keywords[i], "if") == 0) return If;
-            if (strcmp(keywords[i], "else") == 0) return Else;
-            if (strcmp(keywords[i], "while") == 0) return While;
-            if (strcmp(keywords[i], "for") == 0) return For;
-            if (strcmp(keywords[i], "return") == 0) return Return;
-            if (strcmp(keywords[i], "char") == 0) return Char;
-            if (strcmp(keywords[i], "void") == 0) return Void;
-            if (strcmp(keywords[i], "const") == 0) return Const;
-            if (strcmp(keywords[i], "fn") == 0) return Fn;
-            if (strcmp(keywords[i], "switch") == 0) return Switch;
-            if (strcmp(keywords[i], "case") == 0) return Case;
-            if (strcmp(keywords[i], "default") == 0) return Default;
-            if (strcmp(keywords[i], "struct") == 0) return Struct;
-            if (strcmp(keywords[i], "enum") == 0) return Enum;
-            if (strcmp(keywords[i], "new") == 0) return New;
-            if (strcmp(keywords[i], "null") == 0) return Null;
-            if (strcmp(keywords[i], "true") == 0) return True;
-            if (strcmp(keywords[i], "false") == 0) return False;
-            if (strcmp(keywords[i], "alloc") == 0) return Alloc;
-            if (strcmp(keywords[i], "dealloc") == 0) return Dealloc;
-            if (strcmp(keywords[i], "unsafe") == 0) return Unsafe;
-            if (strcmp(keywords[i], "sizeof") == 0) return Sizeof;
-            if (strcmp(keywords[i], "private") == 0) return Private;
-            if (strcmp(keywords[i], "typeof") == 0) return Typeof;
-            if (strcmp(keywords[i], "import") == 0) return Import;
-            if (strcmp(keywords[i], "export") == 0) return Export;
-            if (strcmp(keywords[i], "cast") == 0) return Cast;
-            if (strcmp(keywords[i], "println") == 0) return Println;
-            if (strcmp(keywords[i], "length") == 0) return Length;
-            if (strcmp(keywords[i], "break") == 0) return Break;
-            if (strcmp(keywords[i], "i8") == 0) return I8;
-            if (strcmp(keywords[i], "i16") == 0) return I16;
-            if (strcmp(keywords[i], "i32") == 0) return I32;
-            if (strcmp(keywords[i], "i64") == 0) return I64;
-            if (strcmp(keywords[i], "f32") == 0) return F32;
-            if (strcmp(keywords[i], "f64") == 0) return F64;
-            if (strcmp(keywords[i], "u8") == 0) return U8;
-            if (strcmp(keywords[i], "u16") == 0) return U16;
-            if (strcmp(keywords[i], "u32") == 0) return U32;
-            if (strcmp(keywords[i], "u64") == 0) return U64;
-            if (strcmp(keywords[i], "string") == 0) return String;
-            if (strcmp(keywords[i], "char") == 0) return Char;
-            if (strcmp(keywords[i], "bool") == 0) return Bool;
-            if (strcmp(keywords[i], "void") == 0) return Void;
+    for (size_t i = 0; i < KEYWORD_COUNT; i++) {
+        if (strncmp(start, keywords[i].keyword, length) == 0 && keywords[i].keyword[length] == '\0') {
+            return keywords[i].token;
         }
     }
-
     return Identifier;
 }
 
 Token getNextToken(Lexer *lexer) {
     skipWhitespace(lexer);
 
-    Token token;
+    Token token = {0};
     token.start = lexer->current;
     token.line = lexer->line;
     token.column = lexer->column;
 
-    switch (*lexer->current) {
-        case '(': token.type = Lparen; lexer->current++; lexer->column++; break;
-        case ')': token.type = Rparen; lexer->current++; lexer->column++; break;
-        case '{': token.type = Lbrace; lexer->current++; lexer->column++; break;
-        case '}': token.type = Rbrace; lexer->current++; lexer->column++; break;
-        case '[': token.type = Lbracket; lexer->current++; lexer->column++; break;
-        case ']': token.type = Rbracket; lexer->current++; lexer->column++; break;
-        case '+':
-            lexer->current++;
-            lexer->column++;
-            if (*lexer->current == '+') {
-                lexer->current++;
-                lexer->column++;
-                token.type = Increment;
-            } else if (*lexer->current == '=') {
-                lexer->current++;
-                lexer->column++;
-                token.type = PlusAssign;
-            } else {
-                token.type = Plus;
-            }
+    char c = *lexer->current;
+    lexer->current++;
+    lexer->column++;
+
+    #define matchNext(expected, typeIfMatch, typeElse) \
+        ( *lexer->current == (expected) ? (lexer->current++, lexer->column++, (typeIfMatch)) : (typeElse) )
+
+    switch (c) {
+        case '(': token.type = Lparen;   break;
+        case ')': token.type = Rparen;   break;
+        case '{': token.type = Lbrace;   break;
+        case '}': token.type = Rbrace;   break;
+        case '[': token.type = Lbracket; break;
+        case ']': token.type = Rbracket; break;
+        case '.': token.type = Dot;      break;
+        case ':': token.type = Colon;    break;
+        case ';': token.type = Semi;     break;
+        case ',': token.type = Comma;    break;
+        case '+': token.type = matchNext('+', Increment, matchNext('=', PlusAssign, Plus)); break;
+        case '-': token.type = matchNext('-', Decrement, matchNext('=', MinusAssign, Minus)); break;
+        case '*': token.type = matchNext('=', StarAssign, Star); break;
+        case '/': token.type = matchNext('=', SlashAssign, Slash); break;
+        case '!': token.type = matchNext('=', NotEqual, Not); break;
+        case '=': token.type = matchNext('=', Equal, Assign); break;
+        case '&': token.type = matchNext('&', LogicalAnd, Ampersand); break;
+        case '|': token.type = matchNext('|', LogicalOr, Pipe); break;
+        case '>': 
+            token.type = matchNext('=', GreaterEqual, matchNext('>', RightShift, Greater));
             break;
-        case '-':
-            lexer->current++;
-            lexer->column++;
-            if (*lexer->current == '-') {
-                lexer->current++;
-                lexer->column++;
-                token.type = Decrement;
-            } else if (*lexer->current == '=') {
-                lexer->current++;
-                lexer->column++;
-                token.type = MinusAssign;
-            } else {
-                token.type = Minus;
-            }
+        case '<': 
+            token.type = matchNext('=', LessEqual, matchNext('<', LeftShift, Less));
             break;
-        case '*':
-            lexer->current++;
-            lexer->column++;
-            if (*lexer->current == '=') {
-                lexer->current++;
-                lexer->column++;
-                token.type = StarAssign;
-            } else {
-                token.type = Star;
-            }
-            break;
-        case '/':
-            lexer->current++;
-            lexer->column++;
-            if (*lexer->current == '=') {
-                lexer->current++;
-                lexer->column++;
-                token.type = SlashAssign;
-            } else {
-                token.type = Slash;
-            }
-            break;
-        case '.': token.type = Dot; lexer->current++; lexer->column++; break;
-        case ':': token.type = Colon; lexer->current++; lexer->column++; break;
-        case ';': token.type = Semi; lexer->current++; lexer->column++; break;
-        case ',': token.type = Comma; lexer->current++; lexer->column++; break;
-        case '!':
-            lexer->current++;
-            lexer->column++;
-            if (*lexer->current == '=') {
-                lexer->current++;
-                lexer->column++;
-                token.type = NotEqual;
-            } else {
-                token.type = Not;
-            }
-            break;
-        case '>':
-            lexer->current++;
-            lexer->column++;
-            if (*lexer->current == '=') {
-                lexer->current++;
-                lexer->column++;
-                token.type = GreaterEqual;
-            } else if (*lexer->current == '>') {
-                lexer->current++;
-                lexer->column++;
-                token.type = RightShift;
-            } else {
-                token.type = Greater;
-            }
-            break;
-        case '<':
-            lexer->current++;
-            lexer->column++;
-            if (*lexer->current == '=') {
-                lexer->current++;
-                lexer->column++;
-                token.type = LessEqual;
-            } else if (*lexer->current == '<') {
-                lexer->current++;
-                lexer->column++;
-                token.type = LeftShift;
-            } else {
-                token.type = Less;
-            }
-            break;
-        case '=':
-            lexer->current++;
-            lexer->column++;
-            if (*lexer->current == '=') {
-                lexer->current++;
-                lexer->column++;
-                token.type = Equal;
-            } else {
-                token.type = Assign;
-            }
-            break;
-        case '&':
-            lexer->current++;
-            lexer->column++;
-            if (*lexer->current == '&') {
-                lexer->current++;
-                lexer->column++;
-                token.type = LogicalAnd;
-            } else {
-                token.type = Ampersand;
-            }
-            break;
-        case '|':
-            lexer->current++;
-            lexer->column++;
-            if (*lexer->current == '|') {
-                lexer->current++;
-                lexer->column++;
-                token.type = LogicalOr;
-            } else {
-                token.type = Pipe;
-            }
-            break;
-        case '"':
-            lexer->current++;
-            lexer->column++;
+
+        case '"': {
+            const char *start = lexer->current;
             while (*lexer->current != '"' && *lexer->current != '\0') {
                 lexer->current++;
                 lexer->column++;
@@ -222,17 +82,17 @@ Token getNextToken(Lexer *lexer) {
             if (*lexer->current == '"') {
                 lexer->current++;
                 lexer->column++;
+                token.type = StringLiteral;
+                token.length = lexer->current - start + 1;
             } else {
-                token.length = 1;
                 error("Unterminated string literal", &token);
+                token.type = Error;
             }
-            token.type = StringLiteral;
-            token.length = lexer->current - token.start;
             return token;
-        case '\0': token.type = Eof; break;
-        case '\'':
-            lexer->current++;
-            lexer->column++;
+        }
+
+        case '\'': {
+            const char *start = lexer->current;
             if (*lexer->current == '\\') {
                 lexer->current++;
                 lexer->column++;
@@ -242,26 +102,31 @@ Token getNextToken(Lexer *lexer) {
             if (*lexer->current == '\'') {
                 lexer->current++;
                 lexer->column++;
+                token.type = CharLiteral;
+                token.length = lexer->current - start + 1;
             } else {
-                token.length = 1;
                 error("Unterminated character literal", &token);
+                token.type = Error;
             }
-            token.type = CharLiteral;
-            token.length = lexer->current - token.start;
             return token;
+        }
+
+        case '\0': token.type = Eof; break;
+
         default:
-            if (isalpha(*lexer->current)) { 
-                const char *start = lexer->current;
+            if (isalpha(c)) {
+                const char *start = lexer->current - 1;
                 while (isalnum(*lexer->current)) {
                     lexer->current++;
                     lexer->column++;
                 }
-                int length = lexer->current - start;
-                token.type = checkKeyword(start, length);
-                token.length = length;
+                token.type = checkKeyword(start, lexer->current - start);
+                token.length = lexer->current - start;
                 return token;
-            } else if (isdigit(*lexer->current)) {
-                const char *start = lexer->current;
+            }
+
+            if (isdigit(c)) {
+                const char *start = lexer->current - 1;
                 while (isdigit(*lexer->current)) {
                     lexer->current++;
                     lexer->column++;
@@ -279,10 +144,10 @@ Token getNextToken(Lexer *lexer) {
                 }
                 token.length = lexer->current - start;
                 return token;
-            } else {
-                token.length = 1;
-                error("Unexpected character", &token);
             }
+
+            error("Unexpected character", &token);
+            token.type = Error;
             break;
     }
 
@@ -295,7 +160,7 @@ int isEndOfFile(Lexer *lexer) {
 }
 
 void skipWhitespace(Lexer *lexer) {
-    while (isspace(*lexer->current)) {
+    while (isspace(*lexer->current) || *lexer->current == '#') {
         if (*lexer->current == '\n') {
             lexer->line++;
             lexer->column = 1;
