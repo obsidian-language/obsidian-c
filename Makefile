@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c17 -Iinclude
-LDFLAGS =
+LDFLAGS = 
 
-ifeq ($(OS),Windows_NT)
+ifeq ($(OS), Windows_NT)
 	LDFLAGS += -static
 endif
 
@@ -18,14 +18,14 @@ TARGET = $(BIN_DIR)/obsidian
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	mkdir $(BIN_DIR)
+	@mkdir $(BIN_DIR)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR):
-	mkdir $(OBJ_DIR)
+	@mkdir $(OBJ_DIR)
 
 DEP = $(OBJ:.o=.d)
 -include $(DEP)
@@ -34,9 +34,6 @@ $(OBJ_DIR)/%.d: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -MM $< -MF $@
 
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
+	@rm -rf $(OBJ_DIR) $(BIN_DIR)
 
-run: $(TARGET)
-	./$(TARGET)
-
-.PHONY: all clean run
+.PHONY: all clean

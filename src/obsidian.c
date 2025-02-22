@@ -1,5 +1,6 @@
 #include "include/common.h"
 #include "include/lexer.h"
+#include "include/parser.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -51,13 +52,20 @@ int main(int argc, char *argv[]) {
     Lexer lexer;
     initLexer(&lexer, buffer);
 
-    do {
-        Token token = getNextToken(&lexer);
-        printf("Token: %d\n", token.type);
-    } while (!isEndOfFile(&lexer));
+    // do {
+    //     Token token = getNextToken(&lexer);
+    //     printf("Token: %d\n", token.type);
+    // } while (!isEndOfFile(&lexer));
+
+    Parser parser;
+    initParser(&parser, &lexer);
+
+    ASTNode *node = parseExpression(&parser);
+    printAST(node, 0);
 
     fclose(file);
     free(buffer);
+    freeAST(node);
 
     return 0;
 }

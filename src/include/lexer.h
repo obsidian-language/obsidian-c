@@ -2,10 +2,10 @@
 #define LEXER_H
 
 typedef enum {
-    Lparen, Rparen, Lbrace, Rbrace, Lbracket, Rbracket, Plus, Minus, Star, Slash, Dot, Colon, Semi, Comma, Not, Greater, Less, Carot, Percent, Assign, Ampersand, Pipe,
-    Question, Power, LogicalOr, LogicalAnd, PlusAssign, MinusAssign, StarAssign, SlashAssign, Equal, NotEqual, GreaterEqual, LessEqual, Decrement, Increment, Xor, LeftShift, RightShift,
-    I8, I16, I32, I64, F32, F64, U8, U16, U32, U64, String, Char, Bool, Void, Const, Fn, If, Else, Switch, Case, Default, While, For, Return, Struct, Enum, New, Null, True, False, Alloc, Dealloc, Unsafe,
-    Sizeof, Private, Typeof, Import, Export, Cast, Println, Length, Break, Eof, Error, IntLiteral, FloatLiteral, BoolLiteral, StringLiteral, CharLiteral, Identifier
+    TLparen, TRparen, TLbrace, TRbrace, TLbracket, TRbracket, TPlus, TMinus, TStar, TSlash, TDot, TColon, TSemi, TComma, TNot, TGreater, TLess, TCarot, TPercent, TAssign, TAmpersand, TPipe,
+    TQuestion, TPower, TLogicalOr, TLogicalAnd, TPlusAssign, TMinusAssign, TStarAssign, TSlashAssign, TEqual, TNotEqual, TGreaterEqual, TLessEqual, TDecrement, TIncrement, TXor, TLeftShift, TRightShift,
+    TI8, TI16, TI32, TI64, TF32, TF64, TU8, TU16, TU32, TU64, TString, TChar, TBool, TVoid, TConst, TFn, TIf, TElse, TSwitch, TCase, TDefault, TWhile, TFor, TReturn, TStruct, TEnum, TNew, TNull, TTrue, TFalse, TAlloc, TDealloc, TUnsafe,
+    TSizeof, TPrivate, TTypeof, TImport, TExport, TCast, TPrintln, TLength, TBreak, TEof, TError, TIntLiteral, TFloatLiteral, TBoolLiteral, TStringLiteral, TCharLiteral, TIdentifier
 } TokenKind;
 
 typedef struct {

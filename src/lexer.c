@@ -6,14 +6,14 @@
 #define KEYWORD_COUNT (sizeof(keywords) / sizeof(keywords[0]))
 
 static const KeywordEntry keywords[] = {
-    {"if", If}, {"else", Else}, {"while", While}, {"for", For}, {"return", Return}, {"const", Const},
-    {"fn", Fn}, {"switch", Switch}, {"case", Case}, {"default", Default}, {"struct", Struct},
-    {"enum", Enum}, {"new", New}, {"null", Null}, {"true", True}, {"false", False},
-    {"alloc", Alloc}, {"dealloc", Dealloc}, {"unsafe", Unsafe}, {"sizeof", Sizeof},
-    {"private", Private}, {"typeof", Typeof}, {"import", Import}, {"export", Export},
-    {"cast", Cast}, {"println", Println}, {"length", Length}, {"break", Break},
-    {"i8", I8}, {"i16", I16}, {"i32", I32}, {"i64", I64}, {"f32", F32}, {"f64", F64},
-    {"u8", U8}, {"u16", U16}, {"u32", U32}, {"u64", U64}, {"string", String}, {"bool", Bool}, {"void", Void}, {"char", Char}
+    {"if", TIf}, {"else", TElse}, {"while", TWhile}, {"for", TFor}, {"return", TReturn}, {"const", TConst},
+    {"fn", TFn}, {"switch", TSwitch}, {"case", TCase}, {"default", TDefault}, {"struct", TStruct},
+    {"enum", TEnum}, {"new", TNew}, {"null", TNull}, {"true", TTrue}, {"false", TFalse},
+    {"alloc", TAlloc}, {"dealloc", TDealloc}, {"unsafe", TUnsafe}, {"sizeof", TSizeof},
+    {"private", TPrivate}, {"typeof", TTypeof}, {"import", TImport}, {"export", TExport},
+    {"cast", TCast}, {"println", TPrintln}, {"length", TLength}, {"break", TBreak},
+    {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"f32", TF32}, {"f64", TF64},
+    {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, {"string", TString}, {"bool", TBool}, {"void", TVoid}, {"char", TChar}
 };
 
 void initLexer(Lexer *lexer, char *source) {
@@ -29,7 +29,7 @@ TokenKind checkKeyword(const char *start, int length) {
             return keywords[i].token;
         }
     }
-    return Identifier;
+    return TIdentifier;
 }
 
 Token getNextToken(Lexer *lexer) {
@@ -48,32 +48,32 @@ Token getNextToken(Lexer *lexer) {
         ( *lexer->current == (expected) ? (lexer->current++, lexer->column++, (typeIfMatch)) : (typeElse) )
 
     switch (c) {
-        case '(': token.type = Lparen;   break;
-        case ')': token.type = Rparen;   break;
-        case '{': token.type = Lbrace;   break;
-        case '}': token.type = Rbrace;   break;
-        case '[': token.type = Lbracket; break;
-        case ']': token.type = Rbracket; break;
-        case '.': token.type = Dot;      break;
-        case ':': token.type = Colon;    break;
-        case ';': token.type = Semi;     break;
-        case ',': token.type = Comma;    break;
-        case '?': token.type = Question; break;
-        case '%': token.type = Percent;  break;
-        case '^': token.type = matchNext('^', Xor, Carot); break;
-        case '+': token.type = matchNext('+', Increment, matchNext('=', PlusAssign, Plus)); break;
-        case '-': token.type = matchNext('-', Decrement, matchNext('=', MinusAssign, Minus)); break;
-        case '*': token.type = matchNext('=', StarAssign, matchNext('*', Power, Star)); break;
-        case '/': token.type = matchNext('=', SlashAssign, Slash); break;
-        case '!': token.type = matchNext('=', NotEqual, Not); break;
-        case '=': token.type = matchNext('=', Equal, Assign); break;
-        case '&': token.type = matchNext('&', LogicalAnd, Ampersand); break;
-        case '|': token.type = matchNext('|', LogicalOr, Pipe); break;
+        case '(': token.type = TLparen;   break;
+        case ')': token.type = TRparen;   break;
+        case '{': token.type = TLbrace;   break;
+        case '}': token.type = TRbrace;   break;
+        case '[': token.type = TLbracket; break;
+        case ']': token.type = TRbracket; break;
+        case '.': token.type = TDot;      break;
+        case ':': token.type = TColon;    break;
+        case ';': token.type = TSemi;     break;
+        case ',': token.type = TComma;    break;
+        case '?': token.type = TQuestion; break;
+        case '%': token.type = TPercent;  break;
+        case '^': token.type = matchNext('^', TXor, TCarot); break;
+        case '+': token.type = matchNext('+', TIncrement, matchNext('=', TPlusAssign, TPlus)); break;
+        case '-': token.type = matchNext('-', TDecrement, matchNext('=', TMinusAssign, TMinus)); break;
+        case '*': token.type = matchNext('=', TStarAssign, matchNext('*', TPower, TStar)); break;
+        case '/': token.type = matchNext('=', TSlashAssign, TSlash); break;
+        case '!': token.type = matchNext('=', TNotEqual, TNot); break;
+        case '=': token.type = matchNext('=', TEqual, TAssign); break;
+        case '&': token.type = matchNext('&', TLogicalAnd, TAmpersand); break;
+        case '|': token.type = matchNext('|', TLogicalOr, TPipe); break;
         case '>': 
-            token.type = matchNext('=', GreaterEqual, matchNext('>', RightShift, Greater));
+            token.type = matchNext('=', TGreaterEqual, matchNext('>', TRightShift, TGreater));
             break;
         case '<': 
-            token.type = matchNext('=', LessEqual, matchNext('<', LeftShift, Less));
+            token.type = matchNext('=', TLessEqual, matchNext('<', TLeftShift, TLess));
             break;
 
         case '"': {
@@ -85,11 +85,11 @@ Token getNextToken(Lexer *lexer) {
             if (*lexer->current == '"') {
                 lexer->current++;
                 lexer->column++;
-                token.type = StringLiteral;
+                token.type = TStringLiteral;
                 token.length = lexer->current - start + 1;
             } else {
                 error("Unterminated string literal", &token);
-                token.type = Error;
+                token.type = TError;
             }
             return token;
         }
@@ -105,16 +105,16 @@ Token getNextToken(Lexer *lexer) {
             if (*lexer->current == '\'') {
                 lexer->current++;
                 lexer->column++;
-                token.type = CharLiteral;
+                token.type = TCharLiteral;
                 token.length = lexer->current - start + 1;
             } else {
                 error("Unterminated character literal", &token);
-                token.type = Error;
+                token.type = TError;
             }
             return token;
         }
 
-        case '\0': token.type = Eof; break;
+        case '\0': token.type = TEof; break;
 
         default:
             if (isalpha(c)) {
@@ -141,16 +141,16 @@ Token getNextToken(Lexer *lexer) {
                         lexer->current++;
                         lexer->column++;
                     }
-                    token.type = FloatLiteral;
+                    token.type = TFloatLiteral;
                 } else {
-                    token.type = IntLiteral;
+                    token.type = TIntLiteral;
                 }
                 token.length = lexer->current - start;
                 return token;
             }
 
             error("Unexpected character", &token);
-            token.type = Error;
+            token.type = TError;
             break;
     }
 

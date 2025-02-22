@@ -1,0 +1,158 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Getopt::Long;
+
+my $prefix = "/usr/local";
+my $build_type = "release";
+my $cc = "";
+my $cxx = "";
+my $cflags = "-Wall -Wextra -Werror -Wpedantic -std=c17 -Iinclude";
+my $ldflags = "";
+my $verbose = 0;
+my $config_file = "config.ini";
+my @features;
+
+sub detect_compiler {
+    my ($specified_cc) = @_;
+    
+    my %compiler_map = (
+        "gcc" => "gcc", "clang" => "clang", "icc" => "icc",
+        "mingw" => "x86_64-w64-mingw32-gcc",
+        "mips" => "mips-linux-gnu-gcc",
+        "mips64" => "mips64-linux-gnuabi64-gcc",
+        "x86_64" => "x86_64-linux-gnu-gcc",
+        "aarch64" => "aarch64-linux-gnu-gcc",
+        "arm" => "arm-linux-gnueabihf-gcc",
+        "riscv64" => "riscv64-linux-gnu-gcc",
+        "powerpc" => "powerpc64le-linux-gnu-gcc"
+    );
+    
+    if ($specified_cc) {
+        if (exists $compiler_map{$specified_cc}) {
+            $specified_cc = $compiler_map{$specified_cc};
+        }
+        
+        if (`which $specified_cc` || `command -v $specified_cc`) {
+            $cc = $specified_cc;
+            $cxx = $specified_cc;
+            $cxx =~ s/gcc/g++/;
+            return;
+        } else {
+            die "Error: Specified compiler '$specified_cc' not found.\n";
+        }
+    }
+    
+    my @compilers = values %compiler_map;
+    foreach my $compiler (@compilers) {
+        if (`which $compiler` || `command -v $compiler`) {
+            $cc = $compiler;
+            $cxx = $compiler;
+            $cxx =~ s/gcc/g++/;
+            return;
+        }
+    }
+    
+    die "Error: No supported compiler found. Please install GCC, Clang, or another valid compiler.\n";
+}
+
+detect_compiler("gcc");
+
+sub show_help {
+    print "Usage: ./Configure [options]\n";
+    print "Options:\n";
+    print "  --prefix=DIR        Set installation directory (default: /usr/local)\n";
+    print "  --debug             Enable debug mode (disables optimizations, adds -g)\n";
+    print "  --cc=COMPILER       Specify C compiler (default: auto-detected)\n";
+    print "  --cxx=COMPILER      Specify C++ compiler (default: auto-detected)\n";
+    print "  --config=FILE       Load configuration from a file (default: config.ini)\n";
+    print "  --verbose           Enable verbose output\n";
+    print "  --enable-FEATURE    Enable a specific feature\n";
+    print "  --disable-FEATURE   Disable a specific feature\n";
+    print "  --help              Show this help message and exit\n";
+    exit 0;
+}
+
+GetOptions(
+    "--prefix=s"   => \$prefix,
+    "--debug"      => sub { $build_type = "debug"; $cflags .= " -g -O0"; },
+    "--cc=s"       => \&detect_compiler,
+    "--cxx=s"      => \$cxx,
+    "--config=s"   => \$config_file,
+    "--enable=s"   => sub { push @features, $_[1]; print "Enabling feature: $_[1]\n"; },
+    "--disable=s"  => sub { push @features, "no-" . $_[1]; print "Disabling feature: $_[1]\n"; },
+    "--verbose"    => \$verbose,
+    "--help"       => \&show_help
+) or die "Invalid options. Use --help for usage.\n";
+
+if (-e $config_file) {
+    print "Loading configuration from $config_file\n";
+    open my $fh, '<', $config_file or die "Could not open $config_file: $!\n";
+    while (<$fh>) {
+        chomp;
+        next if /^#/;
+        my ($key, $value) = split /=/;
+        $ENV{$key} = $value;
+    }
+    close $fh;
+}
+
+my $os = `uname -s`;
+chomp $os;
+my $arch = `uname -m`;
+chomp $arch;
+
+print "Configuring for $os ($arch)\n";
+print "Using C compiler: $cc\n";
+print "Using C++ compiler: $cxx\n";
+print "Build type: $build_type\n";
+print "Installation prefix: $prefix\n";
+print "Enabled features: " . join(' ', @features) . "\n";
+
+if ($os =~ /MINGW|MSYS|CYGWIN/) {
+    $ldflags = "-static";
+    print "Enabling static linking for Windows.\n";
+}
+
+my @dependencies = ("make");
+foreach my $dep (@dependencies) {
+    if (!`which $dep` && !`command -v $dep`) {
+        die "Error: Missing dependency: $dep. Please install it.\n";
+    }
+}
+
+print "All dependencies found. Generating build files...\n";
+
+open my $mf, '>', "Makefile" or die "Could not create Makefile: $!\n";
+print $mf "CC = $cc\n";
+print $mf "CFLAGS = $cflags\n";
+print $mf "LDFLAGS = $ldflags\n\n";
+if ($os =~ /MINGW|MSYS|CYGWIN/) {
+    print $mf "ifeq (\$(OS),Windows_NT)\n";
+    print $mf "\tLDFLAGS += -static\n";
+    print $mf "endif\n\n";
+}
+print $mf "SRC_DIR = src\n";
+print $mf "BIN_DIR = bin\n";
+print $mf "OBJ_DIR = obj\n";
+print $mf "INC_DIR = include\n\n";
+print $mf "SRC = \$(wildcard \$(SRC_DIR)/*.c)\n";
+print $mf "OBJ = \$(patsubst \$(SRC_DIR)/%.c, \$(OBJ_DIR)/%.o, \$(SRC))\n";
+print $mf "TARGET = \$(BIN_DIR)/obsidian\n\n";
+print $mf "all: \$(TARGET)\n\n";
+print $mf "\$(TARGET): \$(OBJ)\n";
+print $mf "\t\@mkdir \$(BIN_DIR)\n";
+print $mf "\t\$(CC) \$(CFLAGS) -o \$@ \$^ \$(LDFLAGS)\n\n";
+print $mf "\$(OBJ_DIR)/%.o: \$(SRC_DIR)/%.c | \$(OBJ_DIR)\n";
+print $mf "\t\$(CC) \$(CFLAGS) -c \$< -o \$@\n\n";
+print $mf "\$(OBJ_DIR):\n";
+print $mf "\t\@mkdir \$(OBJ_DIR)\n\n";
+print $mf "DEP = \$(OBJ:.o=.d)\n";
+print $mf "-include \$(DEP)\n\n";
+print $mf "\$(OBJ_DIR)/%.d: \$(SRC_DIR)/%.c | \$(OBJ_DIR)\n";
+print $mf "\t\$(CC) \$(CFLAGS) -MM \$< -MF \$@\n\n";
+print $mf "clean:\n";
+print $mf "\t\@rm -rf \$(OBJ_DIR) \$(BIN_DIR)\n\n";
+print $mf ".PHONY: all clean\n";
+close $mf;
