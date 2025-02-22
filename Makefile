@@ -18,14 +18,14 @@ TARGET = $(BIN_DIR)/obsidian
 all: $(TARGET)
 
 $(TARGET): $(OBJ)
-	@mkdir $(BIN_DIR)
+	@mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR):
-	@mkdir $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)
 
 DEP = $(OBJ:.o=.d)
 -include $(DEP)
