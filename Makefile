@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c17 -Iinclude
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -std=c17 -Iinclude -Wno-newline-eof
 LDFLAGS = 
 
 ifeq ($(OS), Windows_NT)
