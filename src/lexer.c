@@ -1,6 +1,7 @@
 #include "include/lexer.h"
 #include "include/error.h"
 #include <ctype.h>
+#include <stddef.h>
 #include <string.h>
 
 #define KEYWORD_COUNT (sizeof(keywords) / sizeof(keywords[0]))
@@ -23,7 +24,7 @@ void initLexer(Lexer *lexer, char *source) {
     lexer->column = 1;
 }
 
-TokenKind checkKeyword(const char *start, int length) {
+TokenKind checkKeyword(const char *start, size_t length) {
     for (size_t i = 0; i < KEYWORD_COUNT; i++) {
         if (strncmp(start, keywords[i].keyword, length) == 0 && keywords[i].keyword[length] == '\0') {
             return keywords[i].token;
@@ -33,14 +34,17 @@ TokenKind checkKeyword(const char *start, int length) {
 }
 
 Token getNextToken(Lexer *lexer) {
+    Token token;
+    char c;
+
     skipWhitespace(lexer);
 
-    Token token = {0};
+    token.type = TUnknown;
     token.start = lexer->current;
     token.line = lexer->line;
     token.column = lexer->column;
 
-    char c = *lexer->current;
+    c = *lexer->current;
     lexer->current++;
     lexer->column++;
 
@@ -86,7 +90,7 @@ Token getNextToken(Lexer *lexer) {
                 lexer->current++;
                 lexer->column++;
                 token.type = TStringLiteral;
-                token.length = lexer->current - start + 1;
+                token.length = (int)(lexer->current - start + 1);
             } else {
                 error("Unterminated string literal", &token);
                 token.type = TError;
@@ -106,7 +110,7 @@ Token getNextToken(Lexer *lexer) {
                 lexer->current++;
                 lexer->column++;
                 token.type = TCharLiteral;
-                token.length = lexer->current - start + 1;
+                token.length = (int)(lexer->current - start + 1);
             } else {
                 error("Unterminated character literal", &token);
                 token.type = TError;
@@ -123,8 +127,8 @@ Token getNextToken(Lexer *lexer) {
                     lexer->current++;
                     lexer->column++;
                 }
-                token.type = checkKeyword(start, lexer->current - start);
-                token.length = lexer->current - start;
+                token.type = checkKeyword(start, (size_t)(lexer->current - start));
+                token.length = (int)(lexer->current - start);
                 return token;
             }
 
@@ -145,7 +149,7 @@ Token getNextToken(Lexer *lexer) {
                 } else {
                     token.type = TIntLiteral;
                 }
-                token.length = lexer->current - start;
+                token.length = (int)(lexer->current - start);
                 return token;
             }
 
@@ -154,7 +158,7 @@ Token getNextToken(Lexer *lexer) {
             break;
     }
 
-    token.length = lexer->current - token.start;
+    token.length = (int)(lexer->current - token.start);
     return token;
 }
 

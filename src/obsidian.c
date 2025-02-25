@@ -5,6 +5,12 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
+    const char *source;
+    long length;
+    char *buffer;
+    FILE *file;
+    Lexer lexer;
+
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--version") == 0 || strcmp(argv[i], "-v") == 0) {
             printVersion();
@@ -28,27 +34,26 @@ int main(int argc, char *argv[]) {
         }
     }
      
-    const char *source = argv[1];
-    FILE *file = fopen(source, "r");
+    source = argv[1];
+    file = fopen(source, "r");
     if (file == NULL) {
         fprintf(stderr, "obsidian: error: no input file\n");
         return EXIT_FAILURE;
     }
 
     fseek(file, 0, SEEK_END);
-    long length = ftell(file);
+    length = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    char *buffer = malloc(length + 1);
+    buffer = (char *)malloc((size_t)(length + 1));
     if (buffer == NULL) {
         fprintf(stderr, "obsidian: error: could not allocate memory for file '%s'\n", source);
         return EXIT_FAILURE;
     }
 
-    fread(buffer, 1, length, file);
+    fread(buffer, 1, (size_t)(length), file);
     buffer[length] = '\0';
 
-    Lexer lexer;
     initLexer(&lexer, buffer);
 
     do {

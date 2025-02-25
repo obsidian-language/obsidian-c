@@ -42,30 +42,29 @@ void printVersion(void) {
 }
 
 void systemInfo(char *output, size_t size) {
+    struct utsname buffer;
     if (output == NULL || size == 0) {
         fprintf(stderr, "Invalid output buffer or size\n");
         return;
     }
-
-    #if defined(_WIN32) || defined(_WIN64)
-        if (strcpy_s(output, size, "Windows") != 0) {
-            fprintf(stderr, "Failed to copy system name\n");
-        }
-    #else
-        struct utsname buffer;
-        if (uname(&buffer) != 0) {
-            perror("uname");
-            strncpy(output, "Unknown", size - 1);
-        } else {
-            strncpy(output, buffer.sysname, size - 1);
-        }
-    #endif
+#if defined(_WIN32) || defined(_WIN64)
+    if (strcpy_s(output, size, "Windows") != 0) {
+        fprintf(stderr, "Failed to copy system name\n");
+    }
+#else
+    if (uname(&buffer) != 0) {
+        perror("uname");
+        strncpy(output, "Unknown", size - 1);
+    } else {
+        strncpy(output, buffer.sysname, size - 1);
+    }
+#endif
     output[size - 1] = '\0';
 }
 
 char *strdup(const char *s) {
     size_t len = strlen(s) + 1;
-    char *copy = malloc(len);
+    char *copy = (char *)malloc(len);
     if (copy) {
         memcpy(copy, s, len);
     }

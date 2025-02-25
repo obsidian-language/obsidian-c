@@ -7,16 +7,18 @@
 
 void error(const char *message, Token *token) {
     const char *line_start = token->start;
+    const char *line_end = token->start;
+    int column_offset;
+
     while (line_start > token->start - token->column && line_start > token->start - token->column + 1 && *(line_start - 1) != '\n') {
         line_start--;
     }
 
-    const char *line_end = token->start;
     while (*line_end != '\n' && *line_end != '\0') {
         line_end++;
     }
 
-    int column_offset = token->start - line_start;
+    column_offset = (int)(token->start - line_start);
 
 #ifdef _WIN32
     set_color(FOREGROUND_RED | FOREGROUND_INTENSITY);
