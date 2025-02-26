@@ -1,12 +1,17 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+void set_color(int color);
+
 #ifdef _WIN32
     #include <windows.h>
+    HANDLE hConsole;
     void set_color(int color) {
-        HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-        SetConsoleTextAttribute(hConsole, color);
+        if (color < 0 || color > 0xFF) return;
+        hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute(hConsole, (WORD)color);
     }
+    
 #else
     #define LIGHT_GREEN   "\x1b[1;32m"
     #define LIGHT_YELLOW  "\x1b[1;33m"

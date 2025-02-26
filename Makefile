@@ -9,9 +9,9 @@ BIN_DIR = bin
 OBJ_DIR = obj
 INC_DIR = src/include
 
-MYCFLAGS  = -std=c17 -O2 -march=native
-MYLDFLAGS = -Wl,-E
-MYLIBS    = -ldl
+MYCFLAGS  = -std=c17 -O2
+MYLDFLAGS = 
+MYLIBS    =
 
 CWARNSCPP = \
     -Wfatal-errors \
@@ -26,10 +26,6 @@ CWARNSCPP = \
     -Wconversion \
     -Wstrict-overflow=2
 
-CWARNGCC = \
-    -Wlogical-op \
-    -Wno-aggressive-loop-optimizations
-
 CWARNSC = \
     -Wdeclaration-after-statement \
     -Wmissing-prototypes \
@@ -38,7 +34,7 @@ CWARNSC = \
     -Wc++-compat \
     -Wold-style-definition
 
-CWARNS = $(CWARNSCPP) $(CWARNSC) $(CWARNGCC)
+CWARNS = $(CWARNSCPP) $(CWARNSC)
 
 CPPFLAGS = -I$(INC_DIR) $(CWARNS)
 CFLAGS   = $(MYCFLAGS) -Wall -fno-stack-protector -fno-common

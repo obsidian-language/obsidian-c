@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void error(const char *message, Token *token) {
+int error(const char *message, Token *token) {
     const char *line_start = token->start;
     const char *line_end = token->start;
     int column_offset;
@@ -48,5 +48,5 @@ void error(const char *message, Token *token) {
     }
     fprintf(stderr, "^\n");
 
-    exit(EXIT_FAILURE);
+    return EXIT_FAILURE;
 }

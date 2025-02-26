@@ -3,6 +3,6 @@
 
 #include "lexer.h"
 
-void error(const char *message, Token *token);
+int error(const char *message, Token *token);
 
 #endif // ERROR_H
