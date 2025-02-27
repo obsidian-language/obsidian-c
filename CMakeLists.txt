@@ -4,7 +4,7 @@ project(obsidian C)
 
 if (WIN32) 
     message("Building on Windows...")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c17 -O2 -static -Wall -Wextra -Wshadow -Wundef -Wwrite-strings -Wredundant-decls -Wdisabled-optimization -Wdouble-promotion -Wmissing-declarations -Wconversion -Wstrict-overflow=2 -Wfatal-errors")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c17 -O2 -static")
 elseif(UNIX)
     message("Building on Unix...")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c17 -O2 -Wall -Wextra -Wshadow -Wundef -Wwrite-strings -Wredundant-decls -Wdisabled-optimization -Wdouble-promotion -Wmissing-declarations -Wconversion -Wstrict-overflow=2 -Wfatal-errors")
