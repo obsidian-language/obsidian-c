@@ -5,10 +5,9 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[]) {
-    const char *source;
     long length;
-    char *buffer;
     FILE *file;
+    char *buffer;
     Lexer lexer;
 
     for (int i = 1; i < argc; i++) {
@@ -34,8 +33,7 @@ int main(int argc, char *argv[]) {
         }
     }
      
-    source = argv[1];
-    file = fopen(source, "r");
+    file = fopen(argv[1], "r");
     if (file == NULL) {
         fprintf(stderr, "obsidian: error: no input file\n");
         return EXIT_FAILURE;
@@ -47,7 +45,7 @@ int main(int argc, char *argv[]) {
 
     buffer = (char *)malloc((size_t)(length + 1));
     if (buffer == NULL) {
-        fprintf(stderr, "obsidian: error: could not allocate memory for file '%s'\n", source);
+        fprintf(stderr, "obsidian: error: could not allocate memory for file '%s'\n", argv[1]);
         return EXIT_FAILURE;
     }
 
@@ -56,10 +54,10 @@ int main(int argc, char *argv[]) {
 
     initLexer(&lexer, buffer);
 
-    do {
+    while (!isEndOfFile(&lexer)) {
         Token token = getNextToken(&lexer);
         printf("Token: %d\n", token.type);
-    } while (!isEndOfFile(&lexer));
+    }
 
     fclose(file);
     free(buffer);
