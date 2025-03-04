@@ -1,4 +1,4 @@
-AC_INIT([ObsidianCompiler], [1.0], [obsidian-bugs@obsidian.cc])
+AC_INIT([ObsidianCompiler], [1.0], [https://github.com/obsidian-language/obsidian/issues])
 AC_CONFIG_MACRO_DIRS([m4])
 : ${RELEASE=NO}
 
