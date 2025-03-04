@@ -109,7 +109,7 @@ tar -xvf obsidian-${OS}-${ARCH}.tar.gz
 echo "fn main() int { println(42); return 0; }" > forty_two.ob
 
 # Compile to an executable file:
-./obsidian-${VERSION} forty_two.ob -o forty_two
+./obsidian forty_two.ob -o forty_two
 
 # Run it:
 ./forty_two
@@ -117,22 +117,20 @@ echo "fn main() int { println(42); return 0; }" > forty_two.ob
 
 Note: This is a very early-stage release, and many features are still in development. Check out our [0.1 milestone](/docs/project/milestones.md) for upcoming improvements.
 
-### Building from Source
+### Building & Installing
 
-For those interested in building Obsidian from source or contributing to its development, follow these setup instructions:
+For full infomation on building Obsidian, see [Obsidian Building Guide](#). Here follows a summary - if you get into trouble, the Building Guide has all the answers.
 
-```shell
-# Clone the repository
-git clone https://github.com/obsidian-language/obsidian.git
+Before builing Obsidian you may need to install some other tools and libraries. See, [Setting up your system for builing Obsidian](#).
 
-# Navigate to the project directory
-cd obsidian
-
-# Build the project
-make
+**Quick start**: Obsidian is built using the [Make build system](#). The following gives you a default build:
+```
+$ ./boot
+$ ./configure
+$ make
 ```
 
-This will clone the Obsidian repository, navigate to the project directory, and build the project using `make`. Ensure you have the necessary build tools installed on your system. For more detailed instructions, refer to our [contributing guidelines](CONTRIBUTING.md).
+The `./boot` step is only necessary if this is a tree checked out from git.
 
 ## Join Us
 
