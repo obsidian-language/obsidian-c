@@ -17,6 +17,8 @@ def die(mesg):
 def autoreconf():
     processes = {}
     if os.name == 'nt':
+        # On Windows, autoreconf doesn't seem to respect the ACLOCAL_PATH
+        # environment variable, so we need to set it manually.
         ac_local = os.getenv('ACLOCAL_PATH', '')
         ac_local_arg = re.sub(r';', r':', ac_local)
         ac_local_arg = re.sub(r'\\', r'/', ac_local_arg)
@@ -26,8 +28,9 @@ def autoreconf():
         reconf_cmd = 'autoreconf'
 
     for dir_ in ['.', 'src']:
+        # Skip directories that don't have configure.ac
         if os.path.isfile(os.path.join(dir_, 'configure.ac')):
-            print("Booting %s" % dir_)
+            print('Running autoreconf in %s' % dir_)
             processes[dir_] = subprocess.Popen(['sh', '-c', reconf_cmd], cwd=dir_)
 
     fail = False
