@@ -9,13 +9,11 @@ typedef enum {
 typedef struct {
     TokenKind type;
     char *start;
-    int length;
-    int line, column;
+    int length, line, column;
 } Token;
 
 typedef struct {
-    char *start;
-    char *current;
+    char *start, *current;
     int line, column;
 } Lexer;
 

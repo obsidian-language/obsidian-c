@@ -7,14 +7,7 @@
 #define KEYWORD_COUNT (sizeof(keywords) / sizeof(keywords[0]))
 
 static const KeywordEntry keywords[] = {
-    {"if", TIf}, {"else", TElse}, {"while", TWhile}, {"for", TFor}, {"return", TReturn}, {"const", TConst},
-    {"fn", TFn}, {"switch", TSwitch}, {"case", TCase}, {"default", TDefault}, {"struct", TStruct},
-    {"enum", TEnum}, {"new", TNew}, {"null", TNull}, {"true", TTrue}, {"false", TFalse},
-    {"alloc", TAlloc}, {"dealloc", TDealloc}, {"unsafe", TUnsafe}, {"sizeof", TSizeof},
-    {"private", TPrivate}, {"typeof", TTypeof}, {"import", TImport}, {"export", TExport},
-    {"cast", TCast}, {"println", TPrintln}, {"length", TLength}, {"break", TBreak},
-    {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"f32", TF32}, {"f64", TF64},
-    {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, {"string", TString}, {"bool", TBool}, {"void", TVoid}, {"char", TChar}
+    {"if", TIf}, {"else", TElse}, {"while", TWhile}, {"for", TFor}, {"return", TReturn}, {"const", TConst}, {"fn", TFn}, {"switch", TSwitch}, {"case", TCase}, {"default", TDefault}, {"struct", TStruct}, {"enum", TEnum}, {"new", TNew}, {"null", TNull}, {"true", TTrue}, {"false", TFalse}, {"alloc", TAlloc}, {"dealloc", TDealloc}, {"unsafe", TUnsafe}, {"sizeof", TSizeof}, {"private", TPrivate}, {"typeof", TTypeof}, {"import", TImport}, {"export", TExport}, {"cast", TCast}, {"println", TPrintln}, {"length", TLength}, {"break", TBreak}, {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"f32", TF32}, {"f64", TF64}, {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, {"string", TString}, {"bool", TBool}, {"void", TVoid}, {"char", TChar}
 };
 
 void initLexer(Lexer *lexer, char *source) {
@@ -77,7 +70,6 @@ Token getNextToken(Lexer *lexer) {
         case '<': token.type = matchNext('=', TLessEqual, matchNext('<', TLeftShift, TLess)); break;
 
         case '"': {
-            const char *start = lexer->current;
             while (*lexer->current != '"' && *lexer->current != '\0') {
                 lexer->current++;
                 lexer->column++;
@@ -86,7 +78,7 @@ Token getNextToken(Lexer *lexer) {
                 lexer->current++;
                 lexer->column++;
                 token.type = TStringLiteral;
-                token.length = (int)(lexer->current - start + 1);
+                token.length = (int)(lexer->current - lexer->current + 1);
             } else {
                 error("Unterminated string literal", &token);
                 token.type = TError;
@@ -95,7 +87,6 @@ Token getNextToken(Lexer *lexer) {
         }
 
         case '\'': {
-            const char *start = lexer->current;
             if (*lexer->current == '\\') {
                 lexer->current++;
                 lexer->column++;
@@ -106,7 +97,7 @@ Token getNextToken(Lexer *lexer) {
                 lexer->current++;
                 lexer->column++;
                 token.type = TCharLiteral;
-                token.length = (int)(lexer->current - start + 1);
+                token.length = (int)(lexer->current - lexer->current + 1);
             } else {
                 error("Unterminated character literal", &token);
                 token.type = TError;
@@ -129,7 +120,6 @@ Token getNextToken(Lexer *lexer) {
             }
 
             if (isdigit(c)) {
-                const char *start = lexer->current - 1;
                 while (isdigit(*lexer->current)) {
                     lexer->current++;
                     lexer->column++;
@@ -145,7 +135,7 @@ Token getNextToken(Lexer *lexer) {
                 } else {
                     token.type = TIntLiteral;
                 }
-                token.length = (int)(lexer->current - start);
+                token.length = (int)(lexer->current - lexer->current - 1);
                 return token;
             }
 
