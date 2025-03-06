@@ -73,12 +73,8 @@ Token getNextToken(Lexer *lexer) {
         case '=': token.type = matchNext('=', TEqual, TAssign); break;
         case '&': token.type = matchNext('&', TLogicalAnd, TAmpersand); break;
         case '|': token.type = matchNext('|', TLogicalOr, TPipe); break;
-        case '>': 
-            token.type = matchNext('=', TGreaterEqual, matchNext('>', TRightShift, TGreater));
-            break;
-        case '<': 
-            token.type = matchNext('=', TLessEqual, matchNext('<', TLeftShift, TLess));
-            break;
+        case '>': token.type = matchNext('=', TGreaterEqual, matchNext('>', TRightShift, TGreater)); break;
+        case '<': token.type = matchNext('=', TLessEqual, matchNext('<', TLeftShift, TLess)); break;
 
         case '"': {
             const char *start = lexer->current;
