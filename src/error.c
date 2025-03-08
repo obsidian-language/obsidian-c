@@ -5,7 +5,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-int error(const char *message, Token *token) {
+const char* errorTypeToString(ErrorType type) {
+    switch (type) {
+        case LexicalError: return "Lexical Error";
+        case SyntaxError: return "Syntax Error";
+        case SemanticError: return "Semantic Error";
+        default: return "Unknown Error";
+    }
+}
+
+int error(ErrorType type, const char *message, Token *token) {
     const char *line_start = token->start;
     const char *line_end = token->start;
     int column_offset;
@@ -22,7 +31,7 @@ int error(const char *message, Token *token) {
 
 #ifdef _WIN32
     set_color(FOREGROUND_RED | FOREGROUND_INTENSITY);
-    fprintf(stderr, "Error: ");
+    fprintf(stderr, "%s: ", errorTypeToString(type));
     set_color(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
     fprintf(stderr, "[line ");
     set_color(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
@@ -37,7 +46,7 @@ int error(const char *message, Token *token) {
     fprintf(stderr, "%s: %c\n", message, *token->start);
     set_color(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 #else
-    fprintf(stderr, LIGHT_RED "Error: " RESET);
+    fprintf(stderr, LIGHT_RED "%s: " RESET, errorTypeToString(type));
     fprintf(stderr, "[line " LIGHT_BLUE "%d" RESET ", column " LIGHT_BLUE "%d" RESET "] ", token->line, token->column);
     fprintf(stderr, LIGHT_RED "%s: " RESET "%c\n", message, *token->start);
 #endif

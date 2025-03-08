@@ -30,6 +30,8 @@ int isEndOfFile(Lexer *lexer);
 
 void skipWhitespace(Lexer *lexer);
 
+int compareKeywords(const void *a, const void *b);
+
 TokenKind checkKeyword(const char *start, size_t length);
 
 #endif // LEXER_H

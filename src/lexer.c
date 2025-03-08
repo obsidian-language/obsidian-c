@@ -3,12 +3,17 @@
 #include <ctype.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define KEYWORD_COUNT (sizeof(keywords) / sizeof(keywords[0]))
 
-static const KeywordEntry keywords[] = {
-    {"if", TIf}, {"else", TElse}, {"while", TWhile}, {"for", TFor}, {"return", TReturn}, {"const", TConst}, {"fn", TFn}, {"switch", TSwitch}, {"case", TCase}, {"default", TDefault}, {"struct", TStruct}, {"enum", TEnum}, {"new", TNew}, {"null", TNull}, {"true", TTrue}, {"false", TFalse}, {"alloc", TAlloc}, {"dealloc", TDealloc}, {"unsafe", TUnsafe}, {"sizeof", TSizeof}, {"private", TPrivate}, {"typeof", TTypeof}, {"import", TImport}, {"export", TExport}, {"cast", TCast}, {"println", TPrintln}, {"length", TLength}, {"break", TBreak}, {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"f32", TF32}, {"f64", TF64}, {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, {"string", TString}, {"bool", TBool}, {"void", TVoid}, {"char", TChar}
+static KeywordEntry keywords[] = {
+    {"alloc", TAlloc}, {"break", TBreak}, {"case", TCase}, {"char", TChar}, {"const", TConst}, {"dealloc", TDealloc}, {"default", TDefault}, {"else", TElse}, {"enum", TEnum}, {"export", TExport}, {"false", TFalse}, {"fn", TFn}, {"for", TFor}, {"if", TIf}, {"import", TImport}, {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"length", TLength}, {"new", TNew}, {"null", TNull}, {"private", TPrivate}, {"println", TPrintln}, {"return", TReturn}, {"sizeof", TSizeof}, {"string", TString}, {"struct", TStruct}, {"switch", TSwitch}, {"true", TTrue}, {"typeOf", TTypeof}, {"unsafe", TUnsafe}, {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, {"void", TVoid}, {"while", TWhile}
 };
+
+int compareKeywords(const void *a, const void *b) {
+    return strcmp(((KeywordEntry *)a)->keyword, ((KeywordEntry *)b)->keyword);
+}
 
 void initLexer(Lexer *lexer, char *source) {
     lexer->start = source;
@@ -18,12 +23,14 @@ void initLexer(Lexer *lexer, char *source) {
 }
 
 TokenKind checkKeyword(const char *start, size_t length) {
-    for (size_t i = 0; i < KEYWORD_COUNT; i++) {
-        if (strncmp(start, keywords[i].keyword, length) == 0 && keywords[i].keyword[length] == '\0') {
-            return keywords[i].token;
-        }
-    }
-    return TIdentifier;
+    char keyword[length + 1];
+    memcpy(keyword, start, length);
+    keyword[length] = '\0';
+
+    KeywordEntry key = { .keyword = keyword };
+    KeywordEntry *result = bsearch(&key, keywords, KEYWORD_COUNT, sizeof(KeywordEntry), compareKeywords);
+
+    return (result && strcmp(result->keyword, keyword) == 0) ? result->token : TIdentifier;
 }
 
 Token getNextToken(Lexer *lexer) {
@@ -80,7 +87,7 @@ Token getNextToken(Lexer *lexer) {
                 token.type = TStringLiteral;
                 token.length = (int)(lexer->current - lexer->current + 1);
             } else {
-                error("Unterminated string literal", &token);
+                error(LexicalError, "Unterminated string literal", &token);
                 token.type = TError;
             }
             return token;
@@ -99,7 +106,7 @@ Token getNextToken(Lexer *lexer) {
                 token.type = TCharLiteral;
                 token.length = (int)(lexer->current - lexer->current + 1);
             } else {
-                error("Unterminated character literal", &token);
+                error(LexicalError, "Unterminated character literal", &token);
                 token.type = TError;
             }
             return token;
@@ -139,8 +146,13 @@ Token getNextToken(Lexer *lexer) {
                 return token;
             }
 
-            error("Unexpected character", &token);
+            error(LexicalError, "Unexpected character", &token);
             token.type = TError;
+
+            while (!isspace(*lexer->current) && *lexer->current != '\0') {
+                lexer->current++;
+                lexer->column++;
+            }
             break;
     }
 

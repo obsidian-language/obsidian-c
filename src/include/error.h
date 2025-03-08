@@ -3,6 +3,13 @@
 
 #include "lexer.h"
 
-int error(const char *message, Token *token);
+typedef enum {
+    LexicalError,
+    SyntaxError,
+    SemanticError
+} ErrorType;
+
+const char* errorTypeToString(ErrorType type);
+int error(ErrorType type, const char *message, Token *token);
 
 #endif // ERROR_H
