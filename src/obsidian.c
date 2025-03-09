@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 
     initLexer(&lexer, buffer);
 
-    while (!isEndOfFile(&lexer)) {
+    while (!(*lexer.current == '\0')) {
         Token token = getNextToken(&lexer);
         printf("Token: %d\n", token.type);
     }

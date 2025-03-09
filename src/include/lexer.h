@@ -26,8 +26,6 @@ void initLexer(Lexer *lexer, char *source);
 
 Token getNextToken(Lexer *lexer);
 
-int isEndOfFile(Lexer *lexer);
-
 void skipWhitespace(Lexer *lexer);
 
 int compareKeywords(const void *a, const void *b);
