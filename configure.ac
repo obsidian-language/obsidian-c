@@ -5,7 +5,7 @@ AC_CONFIG_MACRO_DIRS([m4])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 
-CFLAGS="-std=c17 -O2 -Wall -Wextra -Wshadow -Wundef -Wwrite-strings -Wredundant-decls -Wdisabled-optimization -Wdouble-promotion -Wmissing-declarations -Wconversion -Wstrict-overflow=2 -Wfatal-errors"
+CFLAGS="-std=c99 -O2 -Wall -Wextra -Wshadow -Wundef -Wwrite-strings -Wredundant-decls -Wdisabled-optimization -Wdouble-promotion -Wmissing-declarations -Wconversion -Wstrict-overflow=2 -Wfatal-errors"
 AC_SUBST([CFLAGS])
 
 AC_CONFIG_FILES([Makefile src/Makefile])

@@ -59,6 +59,7 @@ Token getNextToken(Lexer *lexer) {
         case ',': token.type = TComma;    break;
         case '?': token.type = TQuestion; break;
         case '%': token.type = TPercent;  break;
+        case '~': token.type = TXorNot;   break;
         case '^': token.type = (*lexer->current == '^') ? (lexer->current++, lexer->column++, TXor) : TCarot; break;
         case '+': token.type = (*lexer->current == '+') ? (lexer->current++, lexer->column++, TIncrement) : ((*lexer->current == '=') ? (lexer->current++, lexer->column++, TPlusAssign) : TPlus); break;
         case '-': token.type = (*lexer->current == '-') ? (lexer->current++, lexer->column++, TDecrement) : ((*lexer->current == '=') ? (lexer->current++, lexer->column++, TMinusAssign) : TMinus); break;
