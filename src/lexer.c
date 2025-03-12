@@ -9,9 +9,7 @@ static KeywordEntry keywords[] = {
     {"alloc", TAlloc}, {"break", TBreak}, {"case", TCase}, {"char", TChar}, {"const", TConst}, {"dealloc", TDealloc}, {"default", TDefault}, {"else", TElse}, {"enum", TEnum}, {"export", TExport}, {"false", TFalse}, {"fn", TFn}, {"for", TFor}, {"if", TIf}, {"import", TImport}, {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"length", TLength}, {"new", TNew}, {"null", TNull}, {"private", TPrivate}, {"println", TPrintln}, {"return", TReturn}, {"sizeof", TSizeof}, {"string", TString}, {"struct", TStruct}, {"switch", TSwitch}, {"true", TTrue}, {"typeOf", TTypeof}, {"unsafe", TUnsafe}, {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, {"void", TVoid}, {"while", TWhile}
 };
 
-int compareKeywords(const void *a, const void *b) {
-    return strcmp(((KeywordEntry *)a)->keyword, ((KeywordEntry *)b)->keyword);
-}
+int compareKeywords(const void *a, const void *b) { return strcmp(((KeywordEntry *)a)->keyword, ((KeywordEntry *)b)->keyword); }
 
 void initLexer(Lexer *lexer, char *source) {
     lexer->start = source;
