@@ -1,5 +1,6 @@
 #include "include/common.h"
 #include "include/lexer.h"
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -9,6 +10,7 @@ int main(int argc, char *argv[]) {
     FILE *file;
     char *buffer;
     Lexer lexer;
+    size_t bytesRead;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--version") == 0 || strcmp(argv[i], "-v") == 0) {
@@ -49,7 +51,13 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    fread(buffer, 1, (size_t)(length), file);
+    bytesRead = fread(buffer, 1, (size_t)(length), file);
+    if (bytesRead != (size_t)length) {
+        fprintf(stderr, "obsidian: error: could not read file '%s'\n", argv[1]);
+        fclose(file);
+        free(buffer);
+        return EXIT_FAILURE;
+    }
     buffer[length] = '\0';
 
     initLexer(&lexer, buffer);
