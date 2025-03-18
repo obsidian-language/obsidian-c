@@ -1,7 +1,7 @@
 AC_INIT([ObsidianCompiler], [1.0], [https://github.com/obsidian-language/obsidian/issues])
 AC_CONFIG_AUX_DIR([config])
-AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_MACRO_DIRS([m4])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 : ${RELEASE=NO}
 
 AC_PROG_CC
