@@ -106,7 +106,7 @@ wget https://github.com/obsidian-language/obsidian/releases/download/v${VERSION}
 tar -xvf obsidian-${OS}-${ARCH}.tar.gz
 
 # Create a simple Obsidian source file:
-echo "fn main() int { println(42); return 0; }" > forty_two.ob
+echo "fn main() i32 { println(42); return 0; }" > forty_two.ob
 
 # Compile to an executable file:
 ./obsidian forty_two.ob -o forty_two

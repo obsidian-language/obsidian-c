@@ -6,7 +6,17 @@ AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC
 
-CFLAGS="-std=c99 -O2 -Wall -Wextra -Wshadow -Wundef -Wwrite-strings -Wredundant-decls -Wdisabled-optimization -Wdouble-promotion -Wmissing-declarations -Wconversion -Wstrict-overflow=2 -Wfatal-errors -Wduplicated-cond -Wduplicated-branches -fno-builtin-memcpy"
+CFLAGS="-std=c99 -O2 -Wall -Wextra -Wshadow -Wundef -Wwrite-strings -Wredundant-decls -Wdisabled-optimization -Wdouble-promotion -Wmissing-declarations -Wconversion -Wstrict-overflow=2 -Wfatal-errors -fno-builtin-memcpy"
+
+case `$CC --version` in
+  *"clang"*)
+    CFLAGS="$CFLAGS"
+    ;;
+  *"gcc"*)
+    CFLAGS="$CFLAGS -Wduplicated-cond -Wduplicated-branches"
+    ;;
+esac
+
 AC_SUBST([CFLAGS])
 
 AC_CONFIG_FILES([Makefile src/Makefile])
