@@ -35,19 +35,39 @@ jobs:
           autotools
           libtool
           make
+          python
+          mingw-w64-x86_64-gcc
         update: true
 
-    - name: Bootstrap the build system
-      shell: msys2 {0}
+    - name: Bootstrap the build system (Linux)
+      if: runner.os == 'Linux'
       run: |
         ./boot
 
-    - name: Configure the project
+    - name: Bootstrap the build system (Windows)
+      if: runner.os == 'Windows'
+      shell: msys2 {0}
+      run: |
+        autoreconf -i && automake --add-missing
+
+    - name: Configure the project (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        ./configure
+
+    - name: Configure the project (Windows)
+      if: runner.os == 'Windows'
       shell: msys2 {0}
       run: |
         ./configure
 
-    - name: Build the project
+    - name: Build the project (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        make
+
+    - name: Build the project (Windows)
+      if: runner.os == 'Windows'
       shell: msys2 {0}
       run: |
         make
