@@ -10,31 +10,53 @@ on:
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up dependencies
+    - name: Set up dependencies (Linux)
+      if: runner.os == 'Linux'
       run: |
-        if [ ${{ runner.os }} == 'Linux' ]; then
-          sudo apt-get update
-          sudo apt-get install -y autoconf automake libtool make gcc
-        fi
-        
+        sudo apt-get update
+        sudo apt-get install -y autoconf automake libtool make gcc
+
+    - name: Set up dependencies (Windows)
+      if: runner.os == 'Windows'
+      shell: powershell
+      run: |
+        choco install -y make autoconf automake libtool msys2
+        echo "C:\msys64\usr\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
     - name: Bootstrap the build system
+      shell: bash
       run: |
         ./boot
 
-    - name: Configure the project
+    - name: Configure the project (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
       run: |
         ./configure
 
-    - name: Build the project
+    - name: Configure the project (Windows)
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        ./configure
+
+    - name: Build the project (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        make
+
+    - name: Build the project (Windows)
+      if: runner.os == 'Windows'
+      shell: bash
       run: |
         make
