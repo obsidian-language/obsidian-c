@@ -28,9 +28,15 @@ def autoreconf():
     else:
         reconf_cmd = 'autoreconf'
 
+
     if platform.system() == 'Darwin':
-        # On MacOS, autoreconf doesn't seem to respect the automake --add-missing
-        # command in autoreconf, so we need to run it manually.
+        # On MacOS, autoreconf doesn't seem to respect the aclocal nor
+        # automake --add-missing, so we need to set it manually.
+        for dir_ in ['.']:
+            if os.path.isfile(os.path.join(dir_, 'aclocal.m4')):
+                print('Running aclocal in %s' % dir_)
+                subprocess.run(['aclocal'], cwd=dir_)
+
         for dir_ in ['.', 'src']:
             if os.path.isfile(os.path.join(dir_, 'configure.ac')):
                 print('Running automake --add-missing in %s' % dir_)
