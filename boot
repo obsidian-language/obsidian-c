@@ -27,19 +27,6 @@ def autoreconf():
     else:
         reconf_cmd = 'autoreconf'
 
-    for dir_ in ['.']:
-        if os.path.isfile(os.path.join(dir_, 'aclocal.m4')):
-            print('Running aclocal in %s' % dir_)
-            subprocess.run(['aclocal'], cwd=dir_)
-
-    for dir_ in ['.', 'src']:
-        if os.path.isfile(os.path.join(dir_, 'configure.ac')):
-            print('Running automake --add-missing in %s' % dir_)
-            result = subprocess.run(['automake', '--add-missing'], cwd=dir_)
-            if result.returncode != 0:
-                print_err('automake --add-missing in %s failed with exit code %d' % (dir_, result.returncode))
-                sys.exit(1)
-
     for dir_ in ['.', 'src']:
         # Skip directories that don't have configure.ac
         if os.path.isfile(os.path.join(dir_, 'configure.ac')):
