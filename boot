@@ -24,9 +24,9 @@ def autoreconf():
         ac_local_arg = re.sub(r';', r':', ac_local)
         ac_local_arg = re.sub(r'\\', r'/', ac_local_arg)
         ac_local_arg = re.sub(r'(\w):/', r'/\1/', ac_local_arg)
-        reconf_cmd = 'ACLOCAL_PATH=%s autoreconf' % ac_local_arg
+        reconf_cmd = 'ACLOCAL_PATH=%s autoreconf -i' % ac_local_arg
     else:
-        reconf_cmd = 'autoreconf'
+        reconf_cmd = 'autoreconf -i'
 
 
     if platform.system() == 'Darwin':
