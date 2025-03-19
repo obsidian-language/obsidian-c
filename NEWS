@@ -1,1 +1,9 @@
 # NEWS
+
+[2025-03-18] - Lexer Unit Testing and CI/CD Integration
+New Features:
+    - Lexer Unit Tests:
+        A comprehensive set of unit tests has been added to the lexer to ensure its correctness and reliability. These tests validate the lexing process, checking tokenization and edge cases to ensure that the lexer correctly handles various input scenarios. This enhancement improves the stability of the lexer and simplifies the identification of issues during development.
+
+    - CI/CD Pipeline Enhancement:
+        The build workflow has been updated to include make check, a command that runs the unit tests as part of the continuous integration (CI) pipeline. This integration ensures that the lexer and related code are thoroughly tested during every build, automatically catching regressions and providing quick feedback on potential issues

@@ -1,1 +1,6 @@
 # ChangeLog
+
+[2025-03-18]
+Added:
+    - Added unit tests for the lexer to improve test coverage and ensure proper functionality of lexing operations.
+    - Integrated `make check` into the CI/CD workflow to automatically run the tests and verify the lexer functionality during the build process.
