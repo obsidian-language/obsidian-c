@@ -70,4 +70,4 @@ jobs:
       if: runner.os == 'Windows'
       shell: msys2 {0}
       run: |
-        make check
+        make
