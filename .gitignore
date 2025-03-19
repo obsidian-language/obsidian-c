@@ -10,12 +10,14 @@ Thumbs.db
 *.o
 *.a
 *obsidian
+*lexer_tests
 *.in
 *Makefile
 
 autom4te.cache
-config.log
-config.status
+*.log
+*.status
+*.trs
 configure
 .deps
 *.dirstamp

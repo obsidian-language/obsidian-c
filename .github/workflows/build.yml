@@ -64,10 +64,10 @@ jobs:
     - name: Build the project (Linux)
       if: runner.os == 'Linux'
       run: |
-        make
+        make check
 
     - name: Build the project (Windows)
       if: runner.os == 'Windows'
       shell: msys2 {0}
       run: |
-        make
+        make check
