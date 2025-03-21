@@ -61,9 +61,9 @@ void systemInfo(char *output, size_t size) {
 #else
     if (uname(&buffer) != 0) {
         perror("uname");
-        strncpy(output, "Unknown", size - 1);
+        snprintf(output, size, "%s", "Unknown");
     } else {
-        strncpy(output, buffer.sysname, size - 1);
+        snprintf(output, size,"%s", buffer.sysname); 
     }
 #endif
 

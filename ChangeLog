@@ -1,6 +1,16 @@
 # ChangeLog
 
-[2025-03-18]
+[2025-02-20]
+
 Added:
-    - Added unit tests for the lexer to improve test coverage and ensure proper functionality of lexing operations.
-    - Integrated `make check` into the CI/CD workflow to automatically run the tests and verify the lexer functionality during the build process.
+- Added Code of conduct and contributing markddown files.
+
+Changed:
+- Moved strncpy() in common.c to snprintf() for better safety with string termination
+- Improved gitignore for better filtering.
+
+[2025-03-18]
+
+Added:
+- Added unit tests for the lexer to improve test coverage and ensure proper functionality of lexing operations.
+- Integrated `make check` into the CI/CD workflow to automatically run the tests and verify the lexer functionality during the build process.

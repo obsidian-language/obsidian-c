@@ -15,11 +15,11 @@
 ### **Why Obsidian?**
 
 - **Fast**:  
-  - Performance comparable to C++ using LLVM, with direct access to low-level constructs.
+  - Performance comparable to C/C++ using LLVM, with direct access to low-level constructs.
   - Efficient and scalable builds.
 
 - **Modern & Evolving**:  
-  - Intuitive for developers familiar with C++, with easy-to-learn language foundations.
+  - Intuitive for developers familiar with C, with easy-to-learn language foundations.
   - Smooth upgrade path between versions.
   - Emphasis on safety and a roadmap towards memory safety.
 
@@ -32,7 +32,7 @@
 
 C++ has long been the standard for high-performance applications, but its extensive history has introduced significant technical debt, complicating further advancements. We believe that creating a new language from the ground up—free from the legacy constraints of C/C++—is the optimal solution to these issues. Obsidian is designed to provide a language with a clean syntax, modular architecture, and contemporary features, facilitating a smoother transition from C++ without compromising on performance.
 
-Obsidian is not intended to replace modern languages like Go, Swift, or Rust; rather, it is tailored for scenarios where moving away from C++ is impractical due to design or performance constraints.
+Obsidian is not intended to replace modern languages like Go, Swift, or Rust; rather, it is tailored for scenarios where moving away from C/C++ is impractical due to design or performance constraints.
 
 ## Language Goals
 
@@ -57,10 +57,6 @@ Obsidian is in the experimental phase, with active development on the toolchain,
 
 - A robust strategy and structure for the Obsidian project.
 - An open-source governance model and evolution process.
-- Core language design informed by C++ experiences, covering:
-  - Generics, class types, and inheritance.
-  - Operator overloading.
-  - Syntax and modular design.
 - An early-stage compiler for converting Obsidian code into executables.
 
 Check out our [full roadmap](/docs/project/roadmap.md) for more details.
@@ -75,16 +71,6 @@ Check out our [full roadmap](/docs/project/roadmap.md) for more details.
     <img src="docs/images/obsidian_snippet.png" width="375" alt="A snippet of Obsidian code. Follow the link to read it." style="vertical-align: top;">
   </a>
 </p>
-
-## Generics
-
-Obsidian features a **[modern generics system](/docs/design/generics/overview.md#what-are-generics)** with type-checked definitions:
-
-- **Type-checked generics**: Catch errors early, without needing instantiation.
-- **Automatic type erasure**: Supports dynamic dispatch without separate implementations, reducing binary size.
-- **Clear interfaces**: Reduce accidental dependencies and ensure clearer contracts.
-
-Obsidian's generics system also allows **specialization** for performance-critical cases, offering similar flexibility to C++ templates. Learn more about [Obsidian's generics](/docs/design/generics).
 
 ## Memory Safety
 
@@ -145,6 +131,6 @@ We'd love to have folks join us and contribute to the project. Obsidian is commi
 You can also directly:
 
 - [Contribute to the language design](CONTRIBUTING.md#contributing-to-the-language-design): feedback on design, new design proposals.
-- [Contribute to the language implementation](CONTRIBUTING.md#contributing-to-the-language-implementation): [Obsidian Toolchain](/lib/), and project infrastructure.
+- [Contribute to the language implementation](CONTRIBUTING.md#contributing-to-the-language-implementation): [Obsidian Toolchain](#), and project infrastructure.
 
 You can **check out some ["good first issues"](https://github.com/obsidian-language/obsidian/labels/good%20first%20issue)**, or join the `#contributing-help` channel on [Discord](https://discord.gg/#). See our full [`CONTRIBUTING`](CONTRIBUTING.md) documentation for more details.
