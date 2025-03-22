@@ -13,6 +13,7 @@ Thumbs.db
 !*.h
 !*.md
 !*.txt
+!.gitkeep
 !*/
 *.exe
 *.o
