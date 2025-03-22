@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - name: Checkout repository
@@ -24,6 +24,11 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y autoconf automake libtool make gcc
+
+    - name: Set up dependenices (Mac)
+      if: runner.os == 'Darwin'
+      run: |
+        brew install gcc autoconf automake python
 
     - name: Set up MSYS2 and dependencies (Windows)
       if: runner.os == 'Windows'
@@ -44,6 +49,11 @@ jobs:
       run: |
         ./boot
 
+    - name: Bootstrap the build system (Mac)
+      if: runner.os == 'Darwin'
+      run: |
+        ./boot
+
     - name: Bootstrap the build system (Windows)
       if: runner.os == 'Windows'
       shell: msys2 {0}
@@ -55,6 +65,11 @@ jobs:
       run: |
         ./configure
 
+    - name: Configure the project (Mac)
+      if: runner.os == 'Darwin'
+      run: |
+        ./configure CC=gcc --host=gcc
+
     - name: Configure the project (Windows)
       if: runner.os == 'Windows'
       shell: msys2 {0}
@@ -65,6 +80,11 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         make check
+
+    - name: Build the project (Mac)
+      if: runner.os == 'Darwin'
+      run: |
+        make
 
     - name: Build the project (Windows)
       if: runner.os == 'Windows'
