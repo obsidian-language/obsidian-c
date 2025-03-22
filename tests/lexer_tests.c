@@ -3,7 +3,7 @@
 #include "include/lexer_tests.h"
 #include "../src/include/lexer.h"
 
-void test_identifier() {
+void test_identifier(void) {
     Lexer lexer;
     Token token;
     const char *input = "variable";
@@ -18,7 +18,7 @@ void test_identifier() {
     assert(token.type == TEof);
 }
 
-void test_keyword() {
+void test_keyword(void) {
     Lexer lexer;
     Token token;
     const char *input = "if";
@@ -33,7 +33,7 @@ void test_keyword() {
     assert(token.type == TEof);
 }
 
-void test_numbers() {
+void test_numbers(void) {
     Lexer lexer;
     Token token;
     const char *input = "123";
@@ -58,7 +58,7 @@ void test_numbers() {
     assert(token.type == TEof);
 }
 
-void test_operator() {
+void test_operator(void) {
     Lexer lexer;
     Token token;
     const char *input = "+";
@@ -73,7 +73,7 @@ void test_operator() {
     assert(token.type == TEof);
 }
 
-int main() {
+int main(void) {
     test_identifier();
     test_keyword();
     test_numbers();
