@@ -85,10 +85,10 @@ jobs:
     - name: Build the project (Mac)
       if: runner.os == 'macOS'
       run: |
-        make
+        make check
 
     - name: Build the project (Windows)
       if: runner.os == 'Windows'
       shell: msys2 {0}
       run: |
-        make
+         check
