@@ -25,9 +25,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y autoconf automake libtool make gcc
 
-    - name: Set up dependenices (Mac)
-      if: runner.os == 'Darwin'
+    - name: Set up dependencies (Mac)
+      if: runner.os == 'macOS'
       run: |
+        brew update
         brew install gcc autoconf automake python
 
     - name: Set up MSYS2 and dependencies (Windows)
@@ -50,7 +51,7 @@ jobs:
         ./boot
 
     - name: Bootstrap the build system (Mac)
-      if: runner.os == 'Darwin'
+      if: runner.os == 'macOS'
       run: |
         ./boot
 
@@ -66,7 +67,7 @@ jobs:
         ./configure
 
     - name: Configure the project (Mac)
-      if: runner.os == 'Darwin'
+      if: runner.os == 'macOS'
       run: |
         ./configure CC=gcc --host=gcc
 
@@ -82,7 +83,7 @@ jobs:
         make check
 
     - name: Build the project (Mac)
-      if: runner.os == 'Darwin'
+      if: runner.os == 'macOS'
       run: |
         make
 
