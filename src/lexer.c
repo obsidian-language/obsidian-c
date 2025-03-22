@@ -19,14 +19,21 @@ void initLexer(Lexer *lexer, char *source) {
 }
 
 TokenKind checkKeyword(const char *start, size_t length) {
-    char keyword[length + 1];
+    char *keyword = (char *)malloc((size_t)length + 1);
+    if (!keyword) {
+        return TIdentifier;
+    }
+
     memcpy(keyword, start, length);
     keyword[length] = '\0';
 
     KeywordEntry key = { .keyword = keyword };
     KeywordEntry *result = bsearch(&key, keywords, sizeof(keywords) / sizeof(keywords[0]), sizeof(KeywordEntry), compareKeywords);
 
-    return (result && strcmp(result->keyword, keyword) == 0) ? result->token : TIdentifier;
+    TokenKind token = (result && strcmp(result->keyword, keyword) == 0) ? result->token : TIdentifier;
+
+    free(keyword);
+    return token;
 }
 
 Token getNextToken(Lexer *lexer) {

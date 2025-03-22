@@ -12,6 +12,7 @@ Thumbs.db
 !*.c
 !*.h
 !*.md
+!*.txt
 !*/
 *.exe
 *.o

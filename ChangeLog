@@ -1,6 +1,14 @@
 # ChangeLog
 
-[2025-02-20]
+[2025-03-21]
+
+Added:
+- New warning flags for VLA (Vairable length arrays)
+
+Changed:
+- Updated the 'checkKeyword' function to fix VLA error
+
+[2025-03-20]
 
 Added:
 - Added Code of conduct and contributing markddown files.
