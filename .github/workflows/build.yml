@@ -92,7 +92,7 @@ jobs:
           make check
 
   build-armv7:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -101,7 +101,7 @@ jobs:
       uses: uraimo/run-on-arch-action@v2
       with:
         arch: armv7
-        distro: ubuntu_latest
+        distro: ubuntu-22.04
         install: |
           apt-get update
           apt-get install -y autoconf automake libtool make gcc python
@@ -112,7 +112,7 @@ jobs:
           make check
 
   build-armv6:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -121,7 +121,7 @@ jobs:
       uses: uraimo/run-on-arch-action@v2
       with:
         arch: armv6
-        distro: ubuntu_latest
+        distro: ubuntu-22.04
         install: |
           apt-get update
           apt-get install -y autoconf automake libtool make gcc python
@@ -132,7 +132,7 @@ jobs:
           make check
 
   build-riscv64:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -141,7 +141,7 @@ jobs:
       uses: uraimo/run-on-arch-action@v2
       with:
         arch: riscv64
-        distro: ubuntu_latest
+        distro: ubuntu-22.04
         install: |
           apt-get update
           apt-get install -y autoconf automake libtool make gcc python
@@ -152,7 +152,7 @@ jobs:
           make check
 
   build-ppc64le:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -161,7 +161,7 @@ jobs:
       uses: uraimo/run-on-arch-action@v2
       with:
         arch: ppc64le
-        distro: ubuntu_latest
+        distro: ubuntu-22.04
         install: |
           apt-get update
           apt-get install -y autoconf automake libtool make gcc python
@@ -172,7 +172,7 @@ jobs:
           make check
 
   build-s390x:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -181,7 +181,7 @@ jobs:
       uses: uraimo/run-on-arch-action@v2
       with:
         arch: s390x
-        distro: ubuntu_latest
+        distro: ubuntu-22.04
         install: |
           apt-get update
           apt-get install -y autoconf automake libtool make gcc python
