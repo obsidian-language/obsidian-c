@@ -45,53 +45,31 @@ jobs:
           mingw-w64-x86_64-gcc
         update: true
 
-    - name: Bootstrap the build system (Linux)
-      if: runner.os == 'Linux'
+    - name: Bootstrap the build system
+      run: ./boot
+
+    - name: Configure the project
+      run: ./configure
+
+    - name: Build the project
+      run: make
+
+  build-x86_64:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y autoconf automake libtool make gcc
+
+    - name: Build project
       run: |
         ./boot
-
-    - name: Bootstrap the build system (Mac)
-      if: runner.os == 'macOS'
-      run: |
-        ./boot
-
-    - name: Bootstrap the build system (Windows)
-      if: runner.os == 'Windows'
-      shell: msys2 {0}
-      run: |
-        autoreconf -i && automake --add-missing
-
-    - name: Configure the project (Linux)
-      if: runner.os == 'Linux'
-      run: |
         ./configure
-
-    - name: Configure the project (Mac)
-      if: runner.os == 'macOS'
-      run: |
-        ./configure CC=gcc --host=gcc
-
-    - name: Configure the project (Windows)
-      if: runner.os == 'Windows'
-      shell: msys2 {0}
-      run: |
-        ./configure
-
-    - name: Build the project (Linux)
-      if: runner.os == 'Linux'
-      run: |
         make check
-
-    - name: Build the project (Mac)
-      if: runner.os == 'macOS'
-      run: |
-        make check
-
-    - name: Build the project (Windows)
-      if: runner.os == 'Windows'
-      shell: msys2 {0}
-      run: |
-         make
 
   build-aarch64:
     runs-on: ubuntu-latest
@@ -106,7 +84,107 @@ jobs:
         distro: ubuntu_latest
         install: |
           apt-get update
-          apt-get install -y autoconf automake libtool make gcc
+          apt-get install -y autoconf automake libtool make gcc python
+
+        run: |
+          ./boot
+          ./configure
+          make check
+
+  build-armv7:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run on armv7
+      uses: uraimo/run-on-arch-action@v2
+      with:
+        arch: armv7
+        distro: ubuntu_latest
+        install: |
+          apt-get update
+          apt-get install -y autoconf automake libtool make gcc python
+
+        run: |
+          ./boot
+          ./configure
+          make check
+
+  build-armv6:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run on armv6
+      uses: uraimo/run-on-arch-action@v2
+      with:
+        arch: armv6
+        distro: ubuntu_latest
+        install: |
+          apt-get update
+          apt-get install -y autoconf automake libtool make gcc python
+
+        run: |
+          ./boot
+          ./configure
+          make check
+
+  build-riscv64:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run on riscv64
+      uses: uraimo/run-on-arch-action@v2
+      with:
+        arch: riscv64
+        distro: ubuntu_latest
+        install: |
+          apt-get update
+          apt-get install -y autoconf automake libtool make gcc python
+
+        run: |
+          ./boot
+          ./configure
+          make check
+
+  build-ppc64le:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run on ppc64le
+      uses: uraimo/run-on-arch-action@v2
+      with:
+        arch: ppc64le
+        distro: ubuntu_latest
+        install: |
+          apt-get update
+          apt-get install -y autoconf automake libtool make gcc python
+
+        run: |
+          ./boot
+          ./configure
+          make check
+
+  build-s390x:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Run on s390x
+      uses: uraimo/run-on-arch-action@v2
+      with:
+        arch: s390x
+        distro: ubuntu_latest
+        install: |
+          apt-get update
+          apt-get install -y autoconf automake libtool make gcc python
 
         run: |
           ./boot
