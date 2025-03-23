@@ -5,7 +5,8 @@
   <a href="#language-goals">Goals</a> |
   <a href="#project-status">Status</a> |
   <a href="#getting-started">Getting Started</a> |
-  <a href="#join-us">Join Us</a>
+  <a href="#join-us">Join Us</a> |
+  <a href="#build-status">Build Status</a>
 </p>
 
 <a href="docs/snippets.md#fib">
@@ -30,9 +31,9 @@
 
 ## Why Build Obsidian?
 
-C++ has long been the standard for high-performance applications, but its extensive history has introduced significant technical debt, complicating further advancements. We believe that creating a new language from the ground up—free from the legacy constraints of C/C++—is the optimal solution to these issues. Obsidian is designed to provide a language with a clean syntax, modular architecture, and contemporary features, facilitating a smoother transition from C++ without compromising on performance.
+C++ has significant technical debt due to its long history. Obsidian aims to solve this by offering a new language with clean syntax, modular architecture, and modern features, ensuring a smooth transition from C++ without losing performance.
 
-Obsidian is not intended to replace modern languages like Go, Swift, or Rust; rather, it is tailored for scenarios where moving away from C/C++ is impractical due to design or performance constraints.
+Obsidian is not meant to replace languages like Go, Swift, or Rust but is designed for cases where moving away from C/C++ is impractical.
 
 ## Language Goals
 
@@ -53,7 +54,7 @@ For more details, see our [goals document](/docs/project/goals.md).
 
 ## Project Status
 
-Obsidian is in the experimental phase, with active development on the toolchain, including a compiler and linker. Our focus is on creating a viable language for evaluation as a C++ successor. Key developments include:
+Obsidian is currently in its experimental phase, with ongoing active development on the toolchain, which includes a compiler and linker. Our primary goal is to create a viable language that can be evaluated as a potential successor to C++. Key advancements include:
 
 - A robust strategy and structure for the Obsidian project.
 - An open-source governance model and evolution process.
@@ -64,10 +65,10 @@ Check out our [full roadmap](/docs/project/roadmap.md) for more details.
 ## Obsidian vs. C++
 
 <p align="center">
-  <a href="docs/snippets.md#c" style="display: inline-block; margin-right: 10px;">
+  <a href="docs/snippets.md#c" style="display: inline-block;">
     <img src="docs/images/cpp_snippet.png" width="375" alt="A snippet of C++ code. Follow the link to read it." style="vertical-align: top;">
   </a>
-  <a href="docs/snippets.md#obsidian" style="display: inline-block; margin-left: 10px;">
+  <a href="docs/snippets.md#obsidian" style="display: inline-block;">
     <img src="docs/images/obsidian_snippet.png" width="375" alt="A snippet of Obsidian code. Follow the link to read it." style="vertical-align: top;">
   </a>
 </p>
@@ -86,19 +87,19 @@ Obsidian is in early development, with nightly releases of the toolchain availab
 
 ```shell
 # Get the release
-wget https://github.com/obsidian-language/obsidian/releases/download/v${VERSION}/obsidian-${OS}-${ARCH}.tar.gz
+$ wget https://github.com/obsidian-language/obsidian/releases/download/v${VERSION}/obsidian-${OS}-${ARCH}.tar.gz
 
 # Unpack the toolchain:
-tar -xvf obsidian-${OS}-${ARCH}.tar.gz
+$ tar -xvf obsidian-${OS}-${ARCH}.tar.gz
 
 # Create a simple Obsidian source file:
-echo "fn main() i32 { println(42); return 0; }" > forty_two.ob
+$ echo "fn main() i32 { println(42); return 0; }" > forty_two.ob
 
 # Compile to an executable file:
-./obsidian forty_two.ob -o forty_two
+$ ./obsidian forty_two.ob -o forty_two
 
 # Run it:
-./forty_two
+$ ./forty_two
 ```
 
 Note: This is a very early-stage release, and many features are still in development. Check out our [0.1 milestone](/docs/project/milestones.md) for upcoming improvements.
@@ -117,6 +118,14 @@ $ make
 ```
 
 The `./boot` step is only necessary if this is a tree checked out from git.
+
+## Build Status
+
+| Master CI    | Build Status                                             |
+|--------------|----------------------------------------------------------|
+| Windows      | ![Windows builds](https://github.com/obsidian-language/obsidian-c/actions/workflows/build.yml/badge.svg?branch=master&event=push)                |
+| macOS        | ![macOS builds](https://github.com/obsidian-language/obsidian-c/actions/workflows/build.yml/badge.svg?branch=master&event=push)                     |
+| Linux Etc    | ![Linux (etc) builds](https://github.com/obsidian-language/obsidian-c/actions/workflows/build.yml/badge.svg?branch=master&event=push)              |
 
 ## Join Us
 
