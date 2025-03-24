@@ -6,10 +6,18 @@
 #include <stdlib.h>
 
 static KeywordEntry keywords[] = {
-    {"alloc", TAlloc}, {"break", TBreak}, {"case", TCase}, {"char", TChar}, {"const", TConst}, {"dealloc", TDealloc}, {"default", TDefault}, {"else", TElse}, {"enum", TEnum}, {"export", TExport}, {"false", TFalse}, {"fn", TFn}, {"for", TFor}, {"if", TIf}, {"import", TImport}, {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"length", TLength}, {"new", TNew}, {"null", TNull}, {"private", TPrivate}, {"println", TPrintln}, {"return", TReturn}, {"sizeof", TSizeof}, {"string", TString}, {"struct", TStruct}, {"switch", TSwitch}, {"true", TTrue}, {"typeOf", TTypeof}, {"unsafe", TUnsafe}, {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, {"void", TVoid}, {"while", TWhile}
+    {"alloc", TAlloc}, {"break", TBreak}, {"case", TCase}, {"char", TChar}, {"const", TConst}, {"dealloc", TDealloc}, {"default", TDefault}, {"else", TElse}, {"enum", TEnum}, {"export", TExport}, {"false", TFalse}, {"fn", TFn}, {"for", TFor}, {"if", TIf}, {"import", TImport}, {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"f32", TF32}, {"f64", TF64},{"length", TLength}, {"new", TNew}, {"null", TNull}, {"private", TPrivate}, {"println", TPrintln}, {"return", TReturn}, {"sizeof", TSizeof}, {"string", TString}, {"struct", TStruct}, {"switch", TSwitch}, {"true", TTrue}, {"typeOf", TTypeof}, {"unsafe", TUnsafe}, {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, {"void", TVoid}, {"while", TWhile}
 };
 
 int compareKeywords(const void *a, const void *b) { return strcmp(((KeywordEntry *)a)->keyword, ((KeywordEntry *)b)->keyword); }
+
+void sortKeywords() {
+    static int sorted = 0;
+    if (!sorted) {
+        qsort(keywords, sizeof(keywords) / sizeof(keywords[0]), sizeof(KeywordEntry), compareKeywords);
+        sorted = 1;
+    }
+}
 
 void initLexer(Lexer *lexer, char *source) {
     lexer->start = source;
@@ -19,21 +27,18 @@ void initLexer(Lexer *lexer, char *source) {
 }
 
 TokenKind checkKeyword(const char *start, size_t length) {
-    char *keyword = (char *)malloc((size_t)length + 1);
-    if (!keyword) {
-        return TIdentifier;
-    }
+    sortKeywords();
 
+    char keyword[32];
     memcpy(keyword, start, length);
     keyword[length] = '\0';
 
     KeywordEntry key = { .keyword = keyword };
-    KeywordEntry *result = bsearch(&key, keywords, sizeof(keywords) / sizeof(keywords[0]), sizeof(KeywordEntry), compareKeywords);
+    
+    size_t keywordsCount = sizeof(keywords) / sizeof(keywords[0]);
+    KeywordEntry *result = bsearch(&key, keywords, keywordsCount, sizeof(KeywordEntry), compareKeywords);
 
-    TokenKind token = (result && strcmp(result->keyword, keyword) == 0) ? result->token : TIdentifier;
-
-    free(keyword);
-    return token;
+    return result ? result->token : TIdentifier;
 }
 
 Token getNextToken(Lexer *lexer) {
@@ -86,7 +91,7 @@ Token getNextToken(Lexer *lexer) {
                 lexer->current++;
                 lexer->column++;
                 token.type = TStringLiteral;
-                token.length = (int)(lexer->current - lexer->current + 1);
+                token.length = (int)(lexer->current - token.start);
             } else {
                 error(LexicalError, "Unterminated string literal", &token);
                 token.type = TError;
@@ -105,7 +110,7 @@ Token getNextToken(Lexer *lexer) {
                 lexer->current++;
                 lexer->column++;
                 token.type = TCharLiteral;
-                token.length = (int)(lexer->current - lexer->current + 1);
+                token.length = (int)(lexer->current - token.start);
             } else {
                 error(LexicalError, "Unterminated character literal", &token);
                 token.type = TError;

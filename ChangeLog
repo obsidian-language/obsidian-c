@@ -1,5 +1,13 @@
 # ChangeLog
 
+[2025-03-24]
+
+Added:
+- Added Qsort to the program, allowing all keywords to work correctly
+
+Changed:
+- Updated the 'checkKeyword' function to remove dynamic allocation, added 32 character limit on char keyword[];
+
 [2025-03-21]
 
 Added:
@@ -7,6 +15,9 @@ Added:
 
 Changed:
 - Updated the 'checkKeyword' function to fix VLA error
+
+Known Issues:
+- Valgrind currently reports an 'Invaild read of size 1', in the Main, This issue doesn't affect token output currently, current status is not fixed
 
 [2025-03-20]
 

@@ -1,4 +1,7 @@
-fn main() i32 {
-    println("Hello, world!");
-    return 0;~
-}
+fn factorial(i32 n) f32 {
+    f32 res = 1.0;
+    for (i32 i = 2; i <= n; i++) {
+        res *= cast(i, f32);
+    }
+    return res;
+}   

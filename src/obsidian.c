@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 
     initLexer(&lexer, buffer);
 
-    while (!(*lexer.current == '\0')) {
+    while (lexer.current && *lexer.current != '\0') {
         Token token = getNextToken(&lexer);
         printf("Token: %d\n", token.type);
     }
