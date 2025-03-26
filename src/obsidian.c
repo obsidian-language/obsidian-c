@@ -62,8 +62,12 @@ int main(int argc, char *argv[]) {
 
     initLexer(&lexer, buffer);
 
-    while (lexer.current && *lexer.current != '\0') {
+    while (1) {
         Token token = getNextToken(&lexer);
+        if (token.type == TEof) {
+            break;
+        }
+
         printf("Token: %d\n", token.type);
     }
 

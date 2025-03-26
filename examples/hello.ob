@@ -4,4 +4,4 @@ fn factorial(i32 n) f32 {
         res *= cast(i, f32);
     }
     return res;
-}   
+}

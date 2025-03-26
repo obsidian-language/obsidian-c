@@ -11,7 +11,7 @@ static KeywordEntry keywords[] = {
 
 int compareKeywords(const void *a, const void *b) { return strcmp(((KeywordEntry *)a)->keyword, ((KeywordEntry *)b)->keyword); }
 
-void sortKeywords() {
+void sortKeywords(void) {
     static int sorted = 0;
     if (!sorted) {
         qsort(keywords, sizeof(keywords) / sizeof(keywords[0]), sizeof(KeywordEntry), compareKeywords);
@@ -121,9 +121,9 @@ Token getNextToken(Lexer *lexer) {
         case '\0': token.type = TEof; break;
 
         default:
-            if (isalpha(c)) {
+            if (isalpha(c) || c == '_') {
                 const char *start = lexer->current - 1;
-                while (isalnum(*lexer->current)) {
+                while (isalnum(*lexer->current) || *lexer->current == '_') {
                     lexer->current++;
                     lexer->column++;
                 }

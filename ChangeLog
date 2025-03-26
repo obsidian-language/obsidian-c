@@ -1,5 +1,13 @@
 # ChangeLog
 
+[2025-03-25]
+
+Added:
+- Added debug to configure.ac `run ./configure --enable-debug` to enable
+
+Changed:
+- Fixed 'Invaild read of size 1' in the Main
+
 [2025-03-24]
 
 Added:

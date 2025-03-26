@@ -30,7 +30,7 @@ void skipWhitespace(Lexer *lexer);
 
 int compareKeywords(const void *a, const void *b);
 
-void sortKeywords();
+void sortKeywords(void);
 
 TokenKind checkKeyword(const char *start, size_t length);
 
