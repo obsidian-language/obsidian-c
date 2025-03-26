@@ -69,15 +69,3 @@ void systemInfo(char *output, size_t size) {
 
     output[size - 1] = '\0';
 }
-
-// Redefinition of the standard library's 'strdup' which gets included in
-// #include <string.h> 
-//
-// char *strdup(const char *s) {
-//     size_t len = strlen(s) + 1;
-//     char *copy = (char *)malloc(len);
-//     if (copy) {
-//         memcpy(copy, s, len);
-//     }
-//     return copy;
-// }

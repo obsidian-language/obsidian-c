@@ -14,7 +14,4 @@ void printTargetHelp(void);
 void printWarningsHelp(void);
 void systemInfo(char *output, size_t size);
 
-// Redefined when #include <string.h>
-// char *strdup(const char *s);
-
 #endif // COMMON_H
