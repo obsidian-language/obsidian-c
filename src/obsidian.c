@@ -1,9 +1,19 @@
+#ifdef _WIN32
+
+// Silence deprecation warnings on Windows
+#define _CRT_SECURE_NO_WARNINGS
+
+#endif // WIN32
+       
 #include "include/common.h"
 #include "include/lexer.h"
 #include <stddef.h>
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include <stdio.h>
+
+
 
 int main(int argc, char *argv[]) {
     long length;
