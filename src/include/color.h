@@ -1,6 +1,31 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+/**
+ * @file color.h
+ * @brief Provides functions for setting text colors in the console.
+ *
+ * This header file defines the `set_color` function, which allows changing
+ * the text color in the console output. It includes platform-specific 
+ * implementations for Windows and ANSI escape codes for other systems.
+ *
+ * @author Codezz-ops <codezz-ops@obsidian.cc>
+ * 
+ * @copyright Copyright (c) 2024 Obsidian Language
+ * @license BSD 3-Clause
+ */
+
+/**
+ * @brief Sets the console text color.
+ * 
+ * This function changes the text color of the console output. The color
+ * is specified as an integer value. On Windows, it uses the Windows API
+ * to set the color, while on other platforms, it uses ANSI escape codes.
+ * 
+ * @param color An integer representing the color to set. The valid range
+ *              is platform-dependent; for Windows, it should be between
+ *              0 and 255.
+ */
 void set_color(int color);
 
 #ifdef _WIN32

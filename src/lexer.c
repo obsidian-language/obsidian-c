@@ -1,16 +1,52 @@
-#include "include/lexer.h"
-#include "include/error.h"
-#include <ctype.h>
-#include <stddef.h>
-#include <string.h>
-#include <stdlib.h>
+/**
+ * @file lexer.c
+ * @brief Implements the lexer for the Obsidian programming language.
+ * 
+ * This file is responsible for tokenizing the source code into meaningful symbols 
+ * for further processing. It handles various language constructs and keywords, 
+ * ensuring accurate parsing and syntax analysis.
+ * 
+ * @author Codezz-ops <codezz-ops@obsidian.cc>
+ * 
+ * @copyright Copyright (c) 2024 Obsidian Language
+ * @license BSD 3-Clause
+ */
 
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
+#include "include/error.h"
+#include "include/lexer.h"
+
+/**
+ * @brief Array of keyword entries for the lexer.
+ */
 static KeywordEntry keywords[] = {
-    {"alloc", TAlloc}, {"break", TBreak}, {"case", TCase}, {"char", TChar}, {"const", TConst}, {"dealloc", TDealloc}, {"default", TDefault}, {"else", TElse}, {"enum", TEnum}, {"export", TExport}, {"false", TFalse}, {"fn", TFn}, {"for", TFor}, {"if", TIf}, {"import", TImport}, {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"f32", TF32}, {"f64", TF64},{"length", TLength}, {"new", TNew}, {"null", TNull}, {"private", TPrivate}, {"println", TPrintln}, {"return", TReturn}, {"sizeof", TSizeof}, {"string", TString}, {"struct", TStruct}, {"switch", TSwitch}, {"true", TTrue}, {"typeOf", TTypeof}, {"unsafe", TUnsafe}, {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, {"void", TVoid}, {"while", TWhile}
+    {"alloc", TAlloc}, {"break", TBreak}, {"case", TCase}, {"char", TChar}, {"const", TConst}, 
+    {"dealloc", TDealloc}, {"default", TDefault}, {"else", TElse}, {"enum", TEnum}, {"export", TExport}, 
+    {"false", TFalse}, {"fn", TFn}, {"for", TFor}, {"if", TIf}, {"import", TImport}, 
+    {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"f32", TF32}, 
+    {"f64", TF64}, {"length", TLength}, {"new", TNew}, {"null", TNull}, {"private", TPrivate}, 
+    {"println", TPrintln}, {"return", TReturn}, {"sizeof", TSizeof}, {"string", TString}, 
+    {"struct", TStruct}, {"switch", TSwitch}, {"true", TTrue}, {"typeOf", TTypeof}, 
+    {"unsafe", TUnsafe}, {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, 
+    {"void", TVoid}, {"while", TWhile}
 };
 
-int compareKeywords(const void *a, const void *b) { return strcmp(((KeywordEntry *)a)->keyword, ((KeywordEntry *)b)->keyword); }
+/**
+ * @brief Compares two keyword entries for qsort and bsearch.
+ * 
+ * @param a Pointer to the first keyword entry.
+ * @param b Pointer to the second keyword entry.
+ * @return int Result of the comparison.
+ */
+int compareKeywords(const void *a, const void *b) { 
+    return strcmp(((KeywordEntry *)a)->keyword, ((KeywordEntry *)b)->keyword); 
+}
 
+/**
+ * @brief Sorts the keywords array if it hasn't been sorted yet.
+ */
 void sortKeywords(void) {
     static int sorted = 0;
     if (!sorted) {
@@ -19,6 +55,12 @@ void sortKeywords(void) {
     }
 }
 
+/**
+ * @brief Initializes the lexer with the source code.
+ * 
+ * @param lexer Pointer to the lexer instance.
+ * @param source Pointer to the source code string.
+ */
 void initLexer(Lexer *lexer, char *source) {
     lexer->start = source;
     lexer->current = source;
@@ -26,6 +68,13 @@ void initLexer(Lexer *lexer, char *source) {
     lexer->column = 1;
 }
 
+/**
+ * @brief Checks if a given string is a keyword.
+ * 
+ * @param start Pointer to the start of the keyword string.
+ * @param length Length of the keyword string.
+ * @return TokenKind The token kind corresponding to the keyword or TIdentifier if not found.
+ */
 TokenKind checkKeyword(const char *start, size_t length) {
     sortKeywords();
 
@@ -41,6 +90,12 @@ TokenKind checkKeyword(const char *start, size_t length) {
     return result ? result->token : TIdentifier;
 }
 
+/**
+ * @brief Retrieves the next token from the lexer.
+ * 
+ * @param lexer Pointer to the lexer instance.
+ * @return Token The next token.
+ */
 Token getNextToken(Lexer *lexer) {
     Token token;
     char c;
@@ -166,6 +221,11 @@ Token getNextToken(Lexer *lexer) {
     return token;
 }
 
+/**
+ * @brief Skips whitespace and comments in the source code.
+ * 
+ * @param lexer Pointer to the lexer instance.
+ */
 void skipWhitespace(Lexer *lexer) {
     while (isspace(*lexer->current) || *lexer->current == '#') {
         lexer->column = (*lexer->current == '\n') ? 1 : lexer->column + 1;

@@ -14,18 +14,21 @@ Thumbs.db
 !*.md
 !*.txt
 !.gitkeep
+!*Doxyfile
 !*/
 *.exe
 *.o
 *.a
 *.in
-*Makefile
+*
 
 # === Build system caches ===
 autom4te.cache/
 .cache/
 .deps/
 .vscode/
+latex/
+html/
 *.dirstamp
 configure
 aclocal.m4

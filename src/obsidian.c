@@ -1,10 +1,22 @@
-#ifdef _WIN32
+/**
+ * @file obsidian.c
+ * @brief Main entry point for the Obsidian compiler.
+ *
+ * This file contains the main function and initialization logic for the 
+ * Obsidian compiler. It handles command-line arguments, sets up the 
+ * environment, and starts the compilation process.
+ * 
+ * @author Codezz-ops <codezz-ops@obsidian.cc>
+ * 
+ * @copyright Copyright (c) 2024 Obsidian Language
+ * @license BSD 3-Clause
+ */
 
+#ifdef _WIN32
 // Silence deprecation warnings on Windows
 #define _CRT_SECURE_NO_WARNINGS
-
 #endif // WIN32
-       
+
 #include "include/common.h"
 #include "include/lexer.h"
 #include <stddef.h>
@@ -12,6 +24,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/**
+ * @brief The main entry point of the Obsidian compiler.
+ * 
+ * This function processes command-line arguments, opens the input file,
+ * reads its contents into memory, initializes the lexer, and retrieves
+ * tokens from the source code until the end of the file is reached.
+ * 
+ * @param argc The number of command-line arguments.
+ * @param argv An array of command-line argument strings.
+ * @return int Returns EXIT_SUCCESS on successful execution, or EXIT_FAILURE on error.
+ */
 int main(int argc, char *argv[]) {
     long length;
     FILE *file;
@@ -81,5 +104,5 @@ int main(int argc, char *argv[]) {
     fclose(file);
     free(buffer);
 
-    return 0;
+    return EXIT_SUCCESS;
 }

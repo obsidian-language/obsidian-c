@@ -1,3 +1,17 @@
+/**
+ * @file error.c
+ * @brief Implements the error handling system for the Obsidian programming language.
+ *
+ * This file is responsible for managing error reporting and handling within the 
+ * Obsidian compiler. It defines error types, messages, and functions to report 
+ * errors encountered during compilation and execution.
+ * 
+ * @author Codezz-ops <codezz-ops@obsidian.cc>
+ * 
+ * @copyright Copyright (c) 2024 Obsidian Language
+ * @license BSD 3-Clause
+ */
+
 #include "include/error.h"
 #include "include/color.h"
 
@@ -5,6 +19,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief Converts an ErrorType enum to a string representation.
+ * 
+ * @param type The ErrorType to convert.
+ * @return const char* A string representation of the error type.
+ */
 const char* errorTypeToString(ErrorType type) {
     switch (type) {
         case LexicalError: return "Lexical Error";
@@ -14,6 +34,20 @@ const char* errorTypeToString(ErrorType type) {
     }
 }
 
+/**
+ * @brief Prints an error message to stderr with context information.
+ * 
+ * This function formats and displays an error message, including the type of error,
+ * the line and column where the error occurred, and a snippet of the source code
+ * around the error. It also handles color formatting for terminal output based on
+ * the operating system.
+ * 
+ * @param type The type of error that occurred.
+ * @param message A message describing the error.
+ * @param token A pointer to the Token structure that contains information about
+ *              the location of the error in the source code.
+ * @return int Returns EXIT_FAILURE to indicate an error occurred.
+ */
 int error(ErrorType type, const char *message, Token *token) {
     const char *line_start = token->start;
     const char *line_end = token->start;
