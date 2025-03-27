@@ -17,7 +17,7 @@ def die(mesg):
 def autoreconf():
     processes = {}
     if system() == 'Windows':
-        # On Windows, autoreconf doesn't seem to respect the ACLOCAL_PATHwha
+        # On Windows, autoreconf doesn't seem to respect the ACLOCAL_PATH
         # environment variable, so we need to set it manually.
         ac_local = getenv('ACLOCAL_PATH', '')
         ac_local_arg = sub(r';', r':', ac_local)
@@ -27,12 +27,15 @@ def autoreconf():
     else:
         reconf_cmd = 'autoreconf -i'
 
-    if system() == 'Darwin':
-        # On MacOS, autoreconf doesn't seem to respect the aclocal nor
-        # automake --add-missing, so we need to set it manually.
-        run(['aclocal'], cwd=dir_)
+    # List of directories to check
+    directories = ['.', 'src']
 
-        for dir_ in ['.', 'src']:
+    if system() == 'Darwin':
+        # On macOS, autoreconf doesn't seem to respect the aclocal nor
+        # automake --add-missing, so we need to set it manually.
+        run(['aclocal'], cwd='.')
+
+        for dir_ in directories:
             if path.isfile(path.join(dir_, 'configure.ac')):
                 print('Running automake --add-missing in %s' % dir_)
                 result = run(['automake', '--add-missing'], cwd=dir_)
@@ -40,7 +43,7 @@ def autoreconf():
                     print_err('automake --add-missing in %s failed with exit code %d' % (dir_, result.returncode))
                     exit(1)
 
-    for dir_ in ['.', 'src']:
+    for dir_ in directories:
         # Skip directories that don't have configure.ac
         if path.isfile(path.join(dir_, 'configure.ac')):
             print('Running autoreconf in %s' % dir_)

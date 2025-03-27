@@ -14,7 +14,7 @@ Thumbs.db
 !*.md
 !*.txt
 !.gitkeep
-!*Doxyfile
+!Doxyfile
 !*/
 *.exe
 *.o
@@ -28,7 +28,6 @@ autom4te.cache/
 .deps/
 .vscode/
 latex/
-html/
 *.dirstamp
 configure
 aclocal.m4
