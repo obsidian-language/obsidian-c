@@ -37,11 +37,9 @@ typedef enum {
  * and column numbers.
  */
 typedef struct {
-    TokenKind type; /**< The type of the token. */
-    char *start;    /**< Pointer to the start of the token in the source code. */
-    int length;     /**< Length of the token. */
-    int line;       /**< Line number where the token was found. */
-    int column;     /**< Column number where the token was found. */
+    TokenKind type;
+    char *start;
+    int length, line, column;
 } Token;
 
 /**

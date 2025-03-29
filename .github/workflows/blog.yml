@@ -1,0 +1,48 @@
+name: Update Blog
+
+on:
+  push:
+    paths:
+      - 'ChangeLog'
+    workflow_dispatch:
+
+jobs:
+  update-blog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Obsidian
+        uses: actions/checkout@v3
+
+      - name: Extract latest ChangeLog entry
+        id: changelog
+        run: |
+          NEW_ENTRY=$(awk '/^## /{if (p) exit; p=1} p' ChangeLog)
+          echo "$NEW_ENTRY" > latest_entry.txt
+          TITLE=$(echo "$NEW_ENTRY" | head -n 1 | sed 's/^## //')
+          DATE=$(date +'%Y-%m-%d')
+          FILENAME="_posts/${DATE}-${TITLE// /-}.md"
+          echo "title=$TITLE" >> $GITHUB_ENV
+          echo "filename=$FILENAME" >> $GITHUB_ENV
+
+      - name: Checkout obsidian.github.io repo
+        uses: actions/checkout@v3
+        with:
+          repository: obsidian-language/obsidian.github.io
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Create a new Jekyll post
+        run: |
+          cd obsidian.github.io
+          mkdir -p _posts
+          echo "---" > $filename
+          echo "title: \"${{ env.title }}\"" >> $filename
+          echo "date: $(date -I)" >> $filename
+          echo "layout: post" >> $filename
+          echo "---" >> $filename
+          cat ../latest_entry.txt >> $filename
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@github.com"
+          git add $filename
+          git commit -m "New post from ChangeLog: ${{ env.title }}"
+          git push origin main

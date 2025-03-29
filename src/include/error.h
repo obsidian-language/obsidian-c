@@ -25,9 +25,9 @@
  * during the compilation process.
  */
 typedef enum {
-    LexicalError,   /**< Error related to lexical analysis. */
-    SyntaxError,    /**< Error related to syntax analysis. */
-    SemanticError   /**< Error related to semantic analysis. */
+    LexicalError,
+    SyntaxError,
+    SemanticError
 } ErrorType;
 
 /**

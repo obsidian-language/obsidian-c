@@ -16,36 +16,31 @@
 #include <stdlib.h>
 #include <string.h>
 #include "include/error.h"
-#include "include/lexer.h"
 
 /**
  * @brief Array of keyword entries for the lexer.
  */
 static KeywordEntry keywords[] = {
-    {"alloc", TAlloc}, {"break", TBreak}, {"case", TCase}, {"char", TChar}, {"const", TConst}, 
-    {"dealloc", TDealloc}, {"default", TDefault}, {"else", TElse}, {"enum", TEnum}, {"export", TExport}, 
-    {"false", TFalse}, {"fn", TFn}, {"for", TFor}, {"if", TIf}, {"import", TImport}, 
-    {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"f32", TF32}, 
-    {"f64", TF64}, {"length", TLength}, {"new", TNew}, {"null", TNull}, {"private", TPrivate}, 
-    {"println", TPrintln}, {"return", TReturn}, {"sizeof", TSizeof}, {"string", TString}, 
-    {"struct", TStruct}, {"switch", TSwitch}, {"true", TTrue}, {"typeOf", TTypeof}, 
-    {"unsafe", TUnsafe}, {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, 
-    {"void", TVoid}, {"while", TWhile}
+    {"alloc", TAlloc}, {"break", TBreak}, {"case", TCase}, {"char", TChar}, {"const", TConst}, {"dealloc", TDealloc}, {"default", TDefault}, {"else", TElse}, {"enum", TEnum}, {"export", TExport}, {"false", TFalse}, {"fn", TFn}, {"for", TFor}, {"if", TIf}, {"import", TImport}, {"i8", TI8}, {"i16", TI16}, {"i32", TI32}, {"i64", TI64}, {"f32", TF32}, {"f64", TF64}, {"length", TLength}, {"new", TNew}, {"null", TNull}, {"private", TPrivate}, {"println", TPrintln}, {"return", TReturn}, {"sizeof", TSizeof}, {"string", TString}, {"struct", TStruct}, {"switch", TSwitch}, {"true", TTrue}, {"typeOf", TTypeof}, {"unsafe", TUnsafe}, {"u8", TU8}, {"u16", TU16}, {"u32", TU32}, {"u64", TU64}, {"void", TVoid}, {"while", TWhile}
 };
 
 /**
  * @brief Compares two keyword entries for qsort and bsearch.
  * 
+ * This function is used to compare two keyword entries based on their keyword strings.
+ * It is utilized by the qsort and bsearch functions to sort and search the keywords array.
+ * 
  * @param a Pointer to the first keyword entry.
  * @param b Pointer to the second keyword entry.
- * @return int Result of the comparison.
+ * @return int Result of the comparison: negative if a < b, zero if a == b, positive if a > b.
  */
-int compareKeywords(const void *a, const void *b) { 
-    return strcmp(((KeywordEntry *)a)->keyword, ((KeywordEntry *)b)->keyword); 
-}
+int compareKeywords(const void *a, const void *b) { return strcmp(((KeywordEntry *)a)->keyword, ((KeywordEntry *)b)->keyword); }
 
 /**
  * @brief Sorts the keywords array if it hasn't been sorted yet.
+ * 
+ * This function uses the qsort function to sort the keywords array based on the keyword strings.
+ * It ensures that the keywords are sorted only once to optimize subsequent searches.
  */
 void sortKeywords(void) {
     static int sorted = 0;
@@ -71,21 +66,27 @@ void initLexer(Lexer *lexer, char *source) {
 /**
  * @brief Checks if a given string is a keyword.
  * 
+ * This function compares the provided string against a list of known keywords
+ * and returns the corresponding token type. It sorts the keywords if they
+ * haven't been sorted yet.
+ * 
  * @param start Pointer to the start of the keyword string.
  * @param length Length of the keyword string.
  * @return TokenKind The token kind corresponding to the keyword or TIdentifier if not found.
  */
 TokenKind checkKeyword(const char *start, size_t length) {
     sortKeywords();
-
     char keyword[32];
-    memcpy(keyword, start, length);
+    size_t keywordsCount;
+    KeywordEntry *result;
+
+    memcpy(keyword, start, length);  ///< Copy the keyword from the source.
     keyword[length] = '\0';
 
     KeywordEntry key = { .keyword = keyword };
     
-    size_t keywordsCount = sizeof(keywords) / sizeof(keywords[0]);
-    KeywordEntry *result = bsearch(&key, keywords, keywordsCount, sizeof(KeywordEntry), compareKeywords);
+    keywordsCount = sizeof(keywords) / sizeof(keywords[0]);
+    result = bsearch(&key, keywords, keywordsCount, sizeof(KeywordEntry), compareKeywords);
 
     return result ? result->token : TIdentifier;
 }
@@ -93,8 +94,12 @@ TokenKind checkKeyword(const char *start, size_t length) {
 /**
  * @brief Retrieves the next token from the lexer.
  * 
+ * This function analyzes the source code and returns the next token recognized 
+ * by the lexer. It handles different types of tokens, including operators, 
+ * keywords, literals, and special characters.
+ * 
  * @param lexer Pointer to the lexer instance.
- * @return Token The next token.
+ * @return Token The next token recognized by the lexer.
  */
 Token getNextToken(Lexer *lexer) {
     Token token;
@@ -223,6 +228,9 @@ Token getNextToken(Lexer *lexer) {
 
 /**
  * @brief Skips whitespace and comments in the source code.
+ * 
+ * This function advances the lexer’s current position, skipping over
+ * any whitespace characters or comments found in the source code.
  * 
  * @param lexer Pointer to the lexer instance.
  */

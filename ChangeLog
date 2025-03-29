@@ -1,5 +1,14 @@
 # ChangeLog
 
+## 2025-03-29
+
+### Fixed
+- Resolved issues with Doxygen generation.
+- Improved comment descriptions for better clarity.
+
+### Added
+- Automated ChangeLog push to Jekyll site using GitHub Action
+
 [2025-03-25]
 
 Added:
