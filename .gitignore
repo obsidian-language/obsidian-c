@@ -20,8 +20,6 @@ Thumbs.db
 *.o
 *.a
 *.in
-!.github/workflows/
-*
 
 # === Build system caches ===
 autom4te.cache/
