@@ -13,7 +13,9 @@ Thumbs.db
 !*.h
 !*.md
 !*.txt
+!*.ob
 !.gitkeep
+!Dockerfile
 !Doxyfile
 !*/
 *.exe

@@ -5,48 +5,50 @@
 ### Fixed
 - Resolved issues with Doxygen generation.
 - Improved comment descriptions for better clarity.
+- Resolved issues with `.gitignore`
 
 ### Added
 - Automated ChangeLog push to Jekyll site using GitHub Action
+- Added docker container for obsidian
 
-[2025-03-25]
+## 2025-03-25
 
-Added:
+### Added
 - Added debug to configure.ac `run ./configure --enable-debug` to enable
 
-Changed:
+### Changed
 - Fixed 'Invaild read of size 1' in the Main
 
-[2025-03-24]
+## 2025-03-24
 
-Added:
+### Added
 - Added Qsort to the program, allowing all keywords to work correctly
 
-Changed:
+### Changed
 - Updated the 'checkKeyword' function to remove dynamic allocation, added 32 character limit on char keyword[];
 
-[2025-03-21]
+## 2025-03-21
 
-Added:
+### Added
 - New warning flags for VLA (Vairable length arrays)
 
-Changed:
+### Changed
 - Updated the 'checkKeyword' function to fix VLA error
 
-Known Issues:
+### Known Issues
 - Valgrind currently reports an 'Invaild read of size 1', in the Main, This issue doesn't affect token output currently, current status is not fixed
 
-[2025-03-20]
+## 2025-03-20
 
-Added:
+### Added
 - Added Code of conduct and contributing markddown files.
 
-Changed:
+### Changed
 - Moved strncpy() in common.c to snprintf() for better safety with string termination
 - Improved gitignore for better filtering.
 
-[2025-03-18]
+## 2025-03-18
 
-Added:
+### Added
 - Added unit tests for the lexer to improve test coverage and ensure proper functionality of lexing operations.
 - Integrated `make check` into the CI/CD workflow to automatically run the tests and verify the lexer functionality during the build process.

@@ -41,7 +41,7 @@ jobs:
           echo "---" > ${{ env.filename }}
           echo "title: \"${{ env.title }}\"" >> ${{ env.filename }}
           echo "date: $(date -I)" >> ${{ env.filename }}
-          echo "layout: post" >> ${{ env.filename }}
+          echo "layout: default" >> ${{ env.filename }}
           echo "---" >> ${{ env.filename }}
           cat ../latest_entry.txt >> ${{ env.filename }}
           
