@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - 'ChangeLog'
-  workflow_dispatch:
 
 jobs:
   update-blog:
