@@ -1,22 +1,25 @@
-name: Update Blog
+name: Update Blog from ChangeLog
 
 on:
   push:
     paths:
       - 'ChangeLog'
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   update-blog:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Obsidian
+      - name: Checkout obsidian-c repo
         uses: actions/checkout@v3
+        with:
+          repository: obsidian-language/obsidian-c
 
       - name: Extract latest ChangeLog entry
         id: changelog
         run: |
+          echo "Extracting latest ChangeLog entry..."
           NEW_ENTRY=$(awk '/^## /{if (p) exit; p=1} p' ChangeLog)
           echo "$NEW_ENTRY" > latest_entry.txt
           TITLE=$(echo "$NEW_ENTRY" | head -n 1 | sed 's/^## //')
@@ -29,20 +32,22 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: obsidian-language/obsidian.github.io
+          path: obsidian.github.io
           token: ${{ secrets.GH_PAT }}
 
       - name: Create a new Jekyll post
         run: |
           cd obsidian.github.io
           mkdir -p _posts
-          echo "---" > $filename
-          echo "title: \"${{ env.title }}\"" >> $filename
-          echo "date: $(date -I)" >> $filename
-          echo "layout: post" >> $filename
-          echo "---" >> $filename
-          cat ../latest_entry.txt >> $filename
+          echo "---" > ${{ env.filename }}
+          echo "title: \"${{ env.title }}\"" >> ${{ env.filename }}
+          echo "date: $(date -I)" >> ${{ env.filename }}
+          echo "layout: post" >> ${{ env.filename }}
+          echo "---" >> ${{ env.filename }}
+          cat ../latest_entry.txt >> ${{ env.filename }}
+          
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions@github.com"
-          git add $filename
+          git add ${{ env.filename }}
           git commit -m "New post from ChangeLog: ${{ env.title }}"
           git push origin main
