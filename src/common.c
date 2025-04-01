@@ -96,7 +96,7 @@ void printVersion(void) {
  * or if an error occurs, an appropriate message is printed to stderr.
  */
 void systemInfo(char *output, size_t size) {
-#if defined (__unix__) || defined (__linux__)
+#if defined (__unix__) || defined (__linux__) || defined (__APPLE__)
     struct utsname buffer;
 #endif
 
