@@ -35,6 +35,11 @@
  * @return int Returns EXIT_SUCCESS on successful execution, or EXIT_FAILURE on error.
  */
 int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        fputs("obsidian: error: no input file\n", stderr);
+        return EXIT_FAILURE;
+    }
+
     long length;
     FILE *file;
     char *buffer;
@@ -66,13 +71,13 @@ int main(int argc, char *argv[]) {
      
     file = fopen(argv[1], "r");
     if (file == NULL) {
-        fprintf(stderr, "obsidian: error: no input file\n");
+        fputs("obsidian: error: could not read file\n", stderr);
         return EXIT_FAILURE;
     }
 
     fseek(file, 0, SEEK_END);
     length = ftell(file);
-    fseek(file, 0, SEEK_SET);
+    rewind(file);
 
     buffer = (char *)malloc((size_t)(length + 1));
     if (buffer == NULL) {
@@ -83,8 +88,8 @@ int main(int argc, char *argv[]) {
     bytesRead = fread(buffer, 1, (size_t)(length), file);
     if (bytesRead != (size_t)length) {
         fprintf(stderr, "obsidian: error: could not read file '%s'\n", argv[1]);
-        fclose(file);
         free(buffer);
+        fclose(file);
         return EXIT_FAILURE;
     }
     buffer[length] = '\0';

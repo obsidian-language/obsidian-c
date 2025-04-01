@@ -1,5 +1,16 @@
 # ChangeLog
 
+## 2025-04-01
+
+### Fixed
+- Fixed `snippets` to match new syntax
+
+### Added
+- Added Proper documentation to `Code of Conduct`, `Contributing`, and `Faq` 
+
+### Changed
+- Small optimization to all files
+
 ## 2025-03-29
 
 ### Fixed

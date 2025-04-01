@@ -3,15 +3,15 @@
 ## Obsidian
 A sample of fibonacci sequence in Obsidian.
 ```obsidian
-fn fib(int n) int {
+fn fib(i64 n) i64 {
     if (n <= 1) {
         return n;
     }
-    int a = 0;
-    int b = 1;
-    int temp;
+    i64 a = 0;
+    i64 b = 1;
+    i64 temp;
 
-    for (int i = 2; i <= n; i++) {
+    for (i64 i = 2; i <= n; i++) {
         temp = a + b;
         a = b;
         b = temp;
@@ -19,7 +19,7 @@ fn fib(int n) int {
     return b;
 }
 
-fn main() int {
+fn main() i32 {
     println(fib(92));
     return 0;
 }

@@ -67,15 +67,15 @@ int error(ErrorType type, const char *message, Token *token) {
     set_color(FOREGROUND_RED | FOREGROUND_INTENSITY);
     fprintf(stderr, "%s: ", errorTypeToString(type));
     set_color(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-    fprintf(stderr, "[line ");
+    fputs("[line ", stderr);
     set_color(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
     fprintf(stderr, "%d", token->line);
     set_color(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-    fprintf(stderr, ", column ");
+    fputs(", column ", stderr);
     set_color(FOREGROUND_BLUE | FOREGROUND_INTENSITY);
     fprintf(stderr, "%d", token->column);
     set_color(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
-    fprintf(stderr, "] ");
+    fputs("] ", stderr);
     set_color(FOREGROUND_RED | FOREGROUND_INTENSITY);
     fprintf(stderr, "%s: %c\n", message, *token->start);
     set_color(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
@@ -85,11 +85,11 @@ int error(ErrorType type, const char *message, Token *token) {
     fprintf(stderr, LIGHT_RED "%s: " RESET "%c\n", message, *token->start);
 #endif
     fprintf(stderr, "    %d | %.*s\n", token->line, (int)(line_end - line_start), line_start);
-    fprintf(stderr, "      | ");
+    fputs("      | ", stderr);
     for (int i = 0; i < column_offset; i++) {
         fprintf(stderr, (line_start[i] == '\t') ? "\t" : " ");
     }
-    fprintf(stderr, "^\n");
+    fputs("^\n", stderr);
 
     return EXIT_FAILURE;
 }

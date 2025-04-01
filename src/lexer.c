@@ -80,6 +80,7 @@ TokenKind checkKeyword(const char *start, size_t length) {
     size_t keywordsCount;
     KeywordEntry *result;
 
+    if(length >= sizeof(keyword)) return TIdentifier;
     memcpy(keyword, start, length);  ///< Copy the keyword from the source.
     keyword[length] = '\0';
 

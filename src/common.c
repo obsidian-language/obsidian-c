@@ -96,22 +96,17 @@ void printVersion(void) {
  * or if an error occurs, an appropriate message is printed to stderr.
  */
 void systemInfo(char *output, size_t size) {
-#if defined(_WIN32) || defined(_WIN64)
-    int copy_status;
-#else
+#if defined (__unix__) || defined (__linux__)
     struct utsname buffer;
 #endif
 
     if (output == NULL || size == 0) {
-        fprintf(stderr, "Invalid output buffer or size\n");
+        fputs("Invalid output buffer or size\n", stderr);
         return;
     }
 
 #if defined(_WIN32) || defined(_WIN64)
-    copy_status = strcpy_s(output, size, "Windows");
-    if (copy_status != 0) {
-        fprintf(stderr, "Failed to copy system name\n");
-    }
+    snprintf(output, size, "%s","Windows");
 #else
     if (uname(&buffer) != 0) {
         perror("uname");
@@ -120,6 +115,5 @@ void systemInfo(char *output, size_t size) {
         snprintf(output, size,"%s", buffer.sysname); 
     }
 #endif
-
-    output[size - 1] = '\0';
+    output[size - 1] = '\0'; ///< Kept to insure safety 
 }
