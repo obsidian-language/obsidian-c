@@ -1,5 +1,14 @@
 # ChangeLog
 
+### 2025-04-03
+
+### Fixed
+- Fixed copying root dir via docker
+
+### Changed
+- Updated Docker files to support pip
+- Updated boot file to support colorama
+
 ## 2025-04-01
 
 ### Fixed

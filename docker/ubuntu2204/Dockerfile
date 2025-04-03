@@ -5,6 +5,6 @@ WORKDIR /obsidian-c
 
 RUN make
 
-FROM carbon-ubuntu2204-build
+FROM obsidian-ubuntu2204-build
 
 CMD ["./src/obsidian", "./examples/hello.ob"]

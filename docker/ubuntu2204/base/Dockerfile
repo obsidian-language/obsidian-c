@@ -7,4 +7,5 @@ RUN apt-get update && \
     gcc \
     autotools-dev \
     autoconf \
-    make
+    make \
+    python3-pip
