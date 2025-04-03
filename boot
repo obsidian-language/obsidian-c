@@ -56,7 +56,7 @@ def autoreconf():
     
     for dir_ in directories:
         if path.isfile(path.join(dir_, 'configure.ac')):
-            log(f"Running autoreconf in {dir_}...")
+            log(f"Running autoreconf in {dir_}")
             try:
                 processes[dir_] = Popen(['sh', '-c', reconf_cmd], cwd=dir_)
             except FileNotFoundError:
@@ -64,7 +64,7 @@ def autoreconf():
 
     fail = False
     for k, v in processes.items():
-        log(f"Waiting for autoreconf to complete in {k}...")
+        log(f"Waiting for autoreconf to complete in {k}")
         code = v.wait()
         if code != 0:
             print_err(f"autoreconf in {k} failed with exit code {code}")

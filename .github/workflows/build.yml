@@ -54,7 +54,7 @@ jobs:
     - name: Bootstrap the build system (Mac)
       if: runner.os == 'macOS'
       run: |
-        pip install -r requirements.txt --break-system-packages
+        pip3 install -r requirements.txt
         ./boot
 
     - name: Bootstrap the build system (Windows)
