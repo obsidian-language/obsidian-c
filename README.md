@@ -106,9 +106,9 @@ Note: This is a very early-stage release, and many features are still in develop
 
 ### Building & Installing
 
-For full infomation on building Obsidian, see [Obsidian Building Guide](#). Here follows a summary - if you get into trouble, the Building Guide has all the answers.
+For full information on building Obsidian, see [Obsidian Building Guide](#). Here follows a summary - if you get into trouble, the Building Guide has all the answers.
 
-Before builing Obsidian you may need to install some other tools and libraries. See, [Setting up your system for builing Obsidian](#).
+Before building Obsidian you may need to install some other tools and libraries. See, [Setting up your system for building Obsidian](#).
 
 **Quick start**: Obsidian is built using the [Make build system](#). The following gives you a default build:
 ```
