@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Exprs
 Expr *newFloatNode(double value) {
@@ -22,6 +23,39 @@ Expr *newIntNode(int value) {
   }
 
   *node = (Expr){.kind = INT, .u.numberInt = {.value = value}};
+
+  return node;
+}
+
+Expr *newStringNode(const char *value) {
+  Expr *node = malloc(sizeof(Expr));
+  if (node == NULL) {
+    fputs("malloc failed for string!", stderr);
+  }
+
+  *node = (Expr){.kind = STRING, .u.string = {.value = value}};
+
+  return node;
+}
+
+Expr *newCharNode(char value) {
+  Expr *node = malloc(sizeof(Expr));
+  if (node == NULL) {
+    fputs("malloc failed for string!", stderr);
+  }
+
+  *node = (Expr){.kind = CHAR, .u._char = {.value = value}};
+
+  return node;
+}
+
+Expr *newIdentNode(const char *value) {
+  Expr *node = malloc(sizeof(Expr));
+  if (node == NULL) {
+    fputs("malloc failed for string!", stderr);
+  }
+
+  *node = (Expr){.kind = IDENT, .u.string = {.value = value}};
 
   return node;
 }
@@ -119,6 +153,15 @@ void debugPrintExpr(Expr *expr) {
     break;
   case FLOAT:
     printf("FLOAT: %f\n", expr->u.numberFloat.value);
+    break;
+  case STRING:
+    printf("STRING: %s\n", expr->u.string.value);
+    break;
+  case CHAR:
+    printf("CHAR: %c\n", expr->u._char.value);
+    break;
+  case IDENT:
+    printf("IDENT: %s\n", expr->u.ident.value);
     break;
   case BINARY:
     printf("BINARY: %c\n", expr->u.binary.op);

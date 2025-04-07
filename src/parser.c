@@ -60,7 +60,11 @@ BindingPower getBp(TokenKind kind) {
 
 Expr *nud(Parser *psr) {
   switch (current(psr).type) {
+  case TFloatLiteral:
   case TIntLiteral:
+  case TStringLiteral:
+  case TIdentifier:
+  case TCharLiteral:
     return primary(psr);
   case TMinus:
     return unary(psr);
@@ -129,6 +133,14 @@ Expr *primary(Parser *psr) {
   switch (current(psr).type) {
   case TIntLiteral:
     return newIntNode(atoi(advance(psr).start));
+  case TFloatLiteral:
+    return newFloatNode(atof(advance(psr).start));
+  case TStringLiteral:
+    return newStringNode(advance(psr).start);
+  case TCharLiteral:
+    return newCharNode(*advance(psr).start);
+  case TIdentifier:
+    return newIdentNode(advance(psr).start);
   default:
     error(SemanticError, "Could not parser current token ",
           (Token *)current(psr).start);

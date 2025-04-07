@@ -2,7 +2,18 @@
 #define AST_H
 
 #include <stddef.h>
-typedef enum { PROGRAM, FLOAT, INT, BINARY, UNARY, GROUP, EXPRSTMT } NodeKind;
+typedef enum {
+  PROGRAM,
+  FLOAT,
+  INT,
+  STRING,
+  CHAR,
+  IDENT,
+  BINARY,
+  UNARY,
+  GROUP,
+  EXPRSTMT
+} NodeKind;
 
 typedef struct Expr Expr;
 typedef struct Stmt Stmt;
@@ -17,6 +28,15 @@ struct Expr {
     struct {
       double value;
     } numberFloat;
+    struct {
+      const char *value;
+    } string;
+    struct {
+      char value;
+    } _char;
+    struct {
+      const char *value;
+    } ident;
     struct {
       char op;
       Expr *lhs;
@@ -34,6 +54,9 @@ struct Expr {
 
 Expr *newFloatNode(double value);
 Expr *newIntNode(int value);
+Expr *newStringNode(const char *value);
+Expr *newCharNode(char value);
+Expr *newIdentNode(const char *value);
 Expr *newBinaryNode(char op, Expr *lhs, Expr *rhs);
 Expr *newUnaryNode(char op, Expr *rhs);
 Expr *newGroupNode(Expr *rhs);

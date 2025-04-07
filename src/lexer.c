@@ -13,6 +13,7 @@
  */
 
 #include "include/error.h"
+#include "include/parser.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -327,6 +328,7 @@ Token getNextToken(Lexer *lexer) {
   }
 
   token.length = (int)(lexer->current - token.start);
+
   return token;
 }
 
