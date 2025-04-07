@@ -44,6 +44,12 @@ Token advance(Parser *psr) { return psr->tka.tokens[psr->pos++]; }
 Token peek(Parser *psr, int offset) {
   return psr->tka.tokens[psr->pos + (size_t)offset];
 }
+Token consume(Parser *psr, TokenKind kind, const char *msg) {
+  if (peek(psr, 0).type == kind)
+    return advance(psr);
+  error(SemanticError, msg, psr->tka.tokens);
+  return current(psr);
+}
 
 BindingPower getBp(TokenKind kind) {
   switch (kind) {
@@ -107,6 +113,20 @@ Stmt *parse(TokenArray tka) {
 
 Stmt *parseStmt(Parser *psr) {
   switch (current(psr).type) {
+  case TI8:
+  case TI16:
+  case TI32:
+  case TI64:
+  case TU8:
+  case TU16:
+  case TU32:
+  case TU64:
+  case TF32:
+  case TF64:
+  case TString:
+  case TChar:
+  case TVoid:
+    return varDecl(psr);
   default:
     return exprStmt(psr);
   }
@@ -115,6 +135,18 @@ Stmt *parseStmt(Parser *psr) {
 Stmt *exprStmt(Parser *psr) {
   Expr *expr = parseExpr(psr, defaultValue);
   return newExprStmtNode(expr);
+}
+
+Stmt *varDecl(Parser *psr) {
+  Type *varType = NULL;
+  advance(psr); // NOTE: Temperary until we have a parse type function
+  const char *name =
+      consume(psr, TIdentifier, "Expected an identifer for the var name.")
+          .start;
+  consume(psr, TAssign, "Expected an equal sign to assign a value.");
+  Expr *body = parseExpr(psr, defaultValue);
+  consume(psr, TSemi, "Expected a semicolon to end a var stmt.");
+  return newVarDeclNode(varType, name, body);
 }
 
 Expr *parseExpr(Parser *psr, BindingPower bp) {

@@ -12,11 +12,18 @@ typedef enum {
   BINARY,
   UNARY,
   GROUP,
-  EXPRSTMT
+  EXPRSTMT,
+  VARSTMT
 } NodeKind;
+
+typedef enum {
+  PRIMITIVE, // int, char, ...
+  NAMED,     // user defined
+} TypeKind;
 
 typedef struct Expr Expr;
 typedef struct Stmt Stmt;
+typedef struct Type Type;
 
 struct Expr {
   NodeKind kind;
@@ -83,12 +90,32 @@ struct Stmt {
     struct {
       Expr *expr;
     } ExprStmt;
+    struct {
+      Type *type;
+      const char *name;
+      Expr *body;
+    } VarDecl;
   } u;
 };
 
 Stmt *newProgramNode(NodeStmtArray *body);
 Stmt *newExprStmtNode(Expr *expr);
+Stmt *newVarDeclNode(Type *type, const char *name, Expr *body);
 
 void debugPrintStmt(Stmt *stmt);
+
+struct Type {
+  TypeKind kind;
+
+  union {
+    struct {
+      const char *type;
+    } primative;
+  } u;
+};
+
+Type *newPrimativeTypeNode(const char *type);
+
+void debugPrintType(Type *type);
 
 #endif // AST_H

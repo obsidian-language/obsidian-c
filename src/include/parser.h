@@ -43,6 +43,7 @@ bool hadTokens(Parser *psr);
 Token current(Parser *psr);
 Token advance(Parser *psr);
 Token peek(Parser *psr, int offset);
+Token consume(Parser *psr, TokenKind kind, const char *msg);
 
 Parser *initParser(TokenArray tka);
 Stmt *parse(TokenArray tka);
@@ -64,5 +65,6 @@ Expr *binary(Parser *psr, Expr *left, BindingPower bp);
 
 // Stmt lookup
 Stmt *exprStmt(Parser *psr);
+Stmt *varDecl(Parser *psr);
 
 #endif // parser.h

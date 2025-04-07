@@ -13,7 +13,6 @@
  */
 
 #include "include/error.h"
-#include "include/parser.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>

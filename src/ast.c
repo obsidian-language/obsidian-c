@@ -140,6 +140,30 @@ Stmt *newExprStmtNode(Expr *expr) {
   return node;
 }
 
+Stmt *newVarDeclNode(Type *type, const char *name, Expr *body) {
+  Stmt *node = malloc(sizeof(Stmt));
+  if (node == NULL) {
+    fputs("malloc failed for ExprStmt Node!", stderr);
+  }
+
+  *node = (Stmt){.kind = VARSTMT,
+                 .u.VarDecl = {.type = type, .body = body, .name = name}};
+
+  return node;
+}
+
+// Types
+Type *newPrimativeTypeNode(const char *type) {
+  Type *node = malloc(sizeof(Type));
+  if (node == NULL) {
+    fputs("malloc failed for Primative Type node!", stderr);
+  }
+
+  *node = (Type){.kind = PRIMITIVE, .u.primative = {.type = type}};
+
+  return node;
+}
+
 // Debugging
 void debugPrintExpr(Expr *expr) {
   if (!expr) {
@@ -202,7 +226,29 @@ void debugPrintStmt(Stmt *stmt) {
     printf("Expression Statement:\n");
     debugPrintExpr(stmt->u.ExprStmt.expr);
     break;
+  case VARSTMT:
+    printf("VAR Statement\n");
+    printf("NAME: %s", stmt->u.VarDecl.name);
+    debugPrintType(stmt->u.VarDecl.type);
+    printf("BODY: ");
+    debugPrintExpr(stmt->u.VarDecl.body);
+    break;
   default:
     printf("Unknown Statement Type\n");
+  }
+}
+
+void debugPrintType(Type *type) {
+  if (!type) {
+    printf("NULL Type");
+    return;
+  }
+
+  switch (type->kind) {
+  case PRIMITIVE:
+    printf("PRIMTITIVE Type: %s\n", type->u.primative.type);
+    break;
+  default:
+    printf("Unknown Type Node\n");
   }
 }
