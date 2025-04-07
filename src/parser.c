@@ -61,10 +61,6 @@ BindingPower getBp(TokenKind kind) {
 Expr *nud(Parser *psr) {
   switch (current(psr).type) {
   case TIntLiteral:
-  case TFloatLiteral:
-  case TIdentifier:
-  case TStringLiteral:
-  case TCharLiteral:
     return primary(psr);
   case TMinus:
     return unary(psr);
@@ -96,16 +92,13 @@ Stmt *parse(TokenArray tka) {
   initNodeStmtArray(&body);
 
   while (hadTokens(p)) {
+    pushNodeStmt(&body, parseStmt(p));
     if (current(p).type == TEof)
       break;
-    pushNodeStmt(&body, parseStmt(p));
   }
 
-  Stmt *program = newProgramNode(&body);
-
   free(p);
-  freeNodeStmtArray(&body);
-  return program;
+  return newProgramNode(&body);
 }
 
 Stmt *parseStmt(Parser *psr) {
@@ -121,24 +114,21 @@ Stmt *exprStmt(Parser *psr) {
 }
 
 Expr *parseExpr(Parser *psr, BindingPower bp) {
-  Expr *lhs = nud(psr);
-  if (lhs == NULL)
-    return lhs;
+  Expr *left = nud(psr);
+  if (left == NULL)
+    return left;
 
-  BindingPower cbp = getBp(current(psr).type);
-  while (cbp > bp) {
-    lhs = led(psr, lhs, cbp);
+  while (hadTokens(psr) && getBp(current(psr).type) > bp) {
+    left = led(psr, left, getBp(current(psr).type));
   }
 
-  return lhs;
+  return left;
 }
 
 Expr *primary(Parser *psr) {
   switch (current(psr).type) {
   case TIntLiteral:
     return newIntNode(atoi(advance(psr).start));
-  case TFloatLiteral:
-    return newFloatNode(atof(advance(psr).start));
   default:
     error(SemanticError, "Could not parser current token ",
           (Token *)current(psr).start);
@@ -154,8 +144,10 @@ Expr *unary(Parser *psr) {
 
 Expr *binary(Parser *psr, Expr *left, BindingPower bp) {
   Token op = advance(psr);
-  Expr *right = parseExpr(psr, bp);
-  return newBinaryNode(*op.start, left, right);
+  Expr *rhs = parseExpr(psr, bp);
+  if (rhs == NULL)
+    return rhs;
+  return newBinaryNode(*op.start, left, rhs);
 }
 
 Expr *grouping(Parser *psr) {

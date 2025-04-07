@@ -110,12 +110,11 @@ int main(int argc, char *argv[]) {
     if (token.type == TEof) {
       break;
     }
-
-    /* printf("Token: %d\n", token.type); */
     appendToken(&tka, token);
   }
 
   Stmt *program = parse(tka);
+
   debugPrintStmt(program);
 
   freeToken(&tka);

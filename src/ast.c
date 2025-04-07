@@ -21,7 +21,7 @@ Expr *newIntNode(int value) {
     fputs("malloc failed for int number!", stderr);
   }
 
-  *node = (Expr){.kind = FLOAT, .u.numberInt = {.value = value}};
+  *node = (Expr){.kind = INT, .u.numberInt = {.value = value}};
 
   return node;
 }
@@ -151,7 +151,8 @@ void debugPrintStmt(Stmt *stmt) {
   case PROGRAM:
     printf("PROGRAM Statement\n");
     for (size_t i = 0; i < stmt->u.program.body->size; i++) {
-      // advance the pos
+      Stmt *st = stmt->u.program.body->items[i];
+      debugPrintStmt(st);
     }
     break;
   case EXPRSTMT:
