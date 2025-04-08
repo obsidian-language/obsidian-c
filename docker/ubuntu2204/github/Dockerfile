@@ -5,9 +5,7 @@ RUN git clone https://github.com/obsidian-language/obsidian-c
 WORKDIR /obsidian-c
 
 RUN pip install -r requirements.txt && \
-    ./boot && \
-    ./configure && \
-    make
+    ./boot
 
 FROM obsidian-ubuntu2204-github-build
 

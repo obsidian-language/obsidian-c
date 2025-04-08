@@ -5,7 +5,4 @@ RUN apt-get update && \
     git \
     python3 \
     gcc \
-    autotools-dev \
-    autoconf \
-    make \
     python3-pip
