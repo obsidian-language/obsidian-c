@@ -70,7 +70,7 @@ jobs:
     - name: Build the project (Mac)
       if: runner.os == 'macOS'
       run: |
-        ./boot --cc-flags=-std=c11
+        ./boot --cc-flags=-Wno-implicit-function-declaration
 
     - name: Build the project (Windows)
       if: runner.os == 'Windows'
