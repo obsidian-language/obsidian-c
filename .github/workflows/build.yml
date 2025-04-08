@@ -23,13 +23,13 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y autoconf automake libtool make gcc python3-pip
+        sudo apt-get install -y flex bison gcc python3-pip
 
     - name: Set up dependencies (Mac)
       if: runner.os == 'macOS'
       run: |
         brew update
-        brew install gcc autoconf automake python
+        brew install gcc flex bison python
 
     - name: Set up MSYS2 and dependencies (Windows)
       if: runner.os == 'Windows'
@@ -38,9 +38,8 @@ jobs:
         msystem: MINGW64
         install: >-
           base-devel
-          autotools
-          libtool
-          make
+          flex
+          bison
           python
           mingw-w64-x86_64-gcc
         update: true
@@ -61,36 +60,20 @@ jobs:
       if: runner.os == 'Windows'
       shell: msys2 {0}
       run: |
-        autoreconf -i && automake --add-missing
-
-    - name: Configure the project (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        ./configure
-
-    - name: Configure the project (Mac)
-      if: runner.os == 'macOS'
-      run: |
-        ./configure CC=gcc --host=gcc
-
-    - name: Configure the project (Windows)
-      if: runner.os == 'Windows'
-      shell: msys2 {0}
-      run: |
-        ./configure
+        pip3 install -r requirements.txt --break-system-packages
 
     - name: Build the project (Linux)
       if: runner.os == 'Linux'
       run: |
-        make check
+        ./boot
 
     - name: Build the project (Mac)
       if: runner.os == 'macOS'
       run: |
-        make check
+        ./boot
 
     - name: Build the project (Windows)
       if: runner.os == 'Windows'
       shell: msys2 {0}
       run: |
-         make
+         ./boot

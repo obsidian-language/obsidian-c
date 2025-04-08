@@ -14,9 +14,8 @@ init(autoreset=True)
 # Default compiler and linker flags
 DEFAULT_CC_FLAGS = [
     "-Wall", "-Wextra", "-Wshadow", "-Wundef", "-Wwrite-strings",
-    "-Wredundant-decls", "-Wmissing-declarations", "-Wconversion",
-    "-Wstrict-overflow=2", "-Wfatal-errors", "-pedantic", "-Wvla",
-    "-Wstrict-prototypes", "-std=c17", "-O2", "-flto", "-fno-strict-aliasing"
+    "-Wredundant-decls", "-Wmissing-declarations", "-Wconversion", "-Wfatal-errors", "-pedantic", "-Wvla",
+    "-Wstrict-prototypes", "-fno-strict-aliasing"
 ]
 
 DEFAULT_LD_FLAGS = [
