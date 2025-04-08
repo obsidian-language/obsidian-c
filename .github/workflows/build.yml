@@ -43,6 +43,7 @@ jobs:
           flex
           bison
           python
+          python3-pip
           mingw-w64-x86_64-gcc
         update: true
 
