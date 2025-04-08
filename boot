@@ -19,7 +19,7 @@ DEFAULT_CC_FLAGS = [
 ]
 
 DEFAULT_LD_FLAGS = [
-    "-fPIC", "-s"
+    "-fPIC", "-s", "-lfl"
 ]
 
 def print_err(message):

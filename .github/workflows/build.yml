@@ -62,7 +62,7 @@ jobs:
       if: runner.os == 'Windows'
       shell: msys2 {0}
       run: |
-        pip3 install -r requirements.txt --break-system-packages
+        pip install -r requirements.txt --break-system-packages
 
     - name: Build the project (Linux)
       if: runner.os == 'Linux'
@@ -72,7 +72,7 @@ jobs:
     - name: Build the project (Mac)
       if: runner.os == 'macOS'
       run: |
-        ./boot
+        ./boot --cc-flags=-std=c11
 
     - name: Build the project (Windows)
       if: runner.os == 'Windows'
