@@ -32,6 +32,22 @@ jobs:
           brew install gcc flex bison meson
         fi
 
+    - name: Install scoop (Windows)
+      uses: MinoruSekine/setup-scoop@v4.0.1
+      with:
+        install_scoop: 'true'
+        buckets: extras
+        apps: ${{ env.packages_to_install }}
+        scoop_update: 'true'
+        update_path: 'true'
+
+    - name: Setup scoop PATH (Windows)
+      uses: MinoruSekine/setup-scoop@v4.0.1
+      with:
+        install_scoop: 'false'
+        scoop_update: 'false'
+        update_path: 'true'
+
     - name: Set up dependencies (Windows)
       if: runner.os == 'Windows'
       shell: pwsh
