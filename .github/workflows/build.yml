@@ -33,6 +33,7 @@ jobs:
         fi
 
     - name: Install scoop (Windows)
+      if: runner.os == 'Windows'
       uses: MinoruSekine/setup-scoop@v4.0.1
       with:
         install_scoop: 'true'
@@ -42,6 +43,7 @@ jobs:
         update_path: 'true'
 
     - name: Setup scoop PATH (Windows)
+      if: runner.os == 'Windows'
       uses: MinoruSekine/setup-scoop@v4.0.1
       with:
         install_scoop: 'false'
