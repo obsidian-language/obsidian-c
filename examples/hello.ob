@@ -1,5 +1,1 @@
-fn main() i32 {
-    string x = "Hello, world";
-    println(x);
-    return 0;
-}
+-5;

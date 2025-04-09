@@ -24,6 +24,13 @@ typedef enum {
     NODE_PARAM_LIST,
     NODE_WHILE,
     NODE_PRINTLN,
+    NODE_ARG_LIST,
+    NODE_LENGTH_STMT,
+    NODE_TYPEOF_STMT,
+    NODE_ALLOC_STMT,
+    NODE_DEALLOC_STMT,
+    NODE_SIZEOF_STMT,
+    NODE_UNSAFE_STMT,
 } NodeType;
 
 typedef struct ASTNode ASTNode;
@@ -93,11 +100,33 @@ struct ASTNode {
             ASTNode *body;
         } while_stmt;
         struct {
-            struct ASTNode *expr;
+            ASTNode *expr;
         } println;
         struct {
-            struct ASTNode *expr;
+            ASTNode *expr;
         } return_stmt;
+        struct {
+            ASTNode *expr;
+        } length_stmt;
+        struct {
+            ASTNode *expr;
+        } typeof_stmt;
+        struct {
+            ASTNode *size;
+        } alloc_stmt;
+        struct {
+            ASTNode *pointer;
+        } dealloc_stmt;
+        struct {
+            char *type;
+        } sizeof_stmt;
+        struct {
+            ASTNode *body;
+        } unsafe_stmt;
+        struct {
+            ASTNode **args;
+            int count;
+        } arg_list;
     };
 };
 
@@ -121,7 +150,15 @@ ASTNode *create_param_node(char *name, char *type);
 ASTNode *create_param_list(void);
 ASTNode *create_while_node(ASTNode *condition, ASTNode *body);
 ASTNode *create_println_node(ASTNode *expr);
+ASTNode *create_length_node(ASTNode *expr);
 ASTNode *create_return_node(ASTNode *expr);
+ASTNode *create_typeof_node(ASTNode *expr);
+ASTNode *create_alloc_node(ASTNode *size);
+ASTNode *create_dealloc_node(ASTNode *pointer);
+ASTNode *create_sizeof_node(char *type);
+ASTNode *create_unsafe_node(ASTNode *body);
+ASTNode *create_arg_list(void);
+void add_arg_to_list(ASTNode *list, ASTNode *arg);
 void add_param_to_list(ASTNode *list, ASTNode *param);
 void free_ast(ASTNode *node);
 void print_ast(ASTNode *node, int indent);

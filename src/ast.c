@@ -179,6 +179,62 @@ ASTNode *create_return_node(ASTNode *expr) {
     return node;
 }
 
+ASTNode *create_length_node(ASTNode *expr) {
+    ASTNode *node = malloc(sizeof(ASTNode));
+    node->type = NODE_LENGTH_STMT;
+    node->length_stmt.expr = expr;
+    return node;
+}
+
+ASTNode *create_typeof_node(ASTNode *expr) {
+    ASTNode *node = malloc(sizeof(ASTNode));
+    node->type = NODE_TYPEOF_STMT;
+    node->typeof_stmt.expr = expr;
+    return node;
+}
+
+ASTNode *create_alloc_node(ASTNode *size) {
+    ASTNode *node = malloc(sizeof(ASTNode));
+    node->type = NODE_ALLOC_STMT;
+    node->alloc_stmt.size = size;
+    return node;
+}
+
+ASTNode *create_dealloc_node(ASTNode *pointer) {
+    ASTNode *node = malloc(sizeof(ASTNode));
+    node->type = NODE_DEALLOC_STMT;
+    node->dealloc_stmt.pointer = pointer;
+    return node;
+}
+
+ASTNode *create_sizeof_node(char *type) {
+    ASTNode *node = malloc(sizeof(ASTNode));
+    node->type = NODE_SIZEOF_STMT;
+    node->sizeof_stmt.type = strdup(type);
+    return node;
+}
+
+ASTNode *create_unsafe_node(ASTNode *body) {
+    ASTNode *node = malloc(sizeof(ASTNode));
+    node->type = NODE_UNSAFE_STMT;
+    node->unsafe_stmt.body = body;
+    return node;
+}
+
+ASTNode *create_arg_list() {
+    ASTNode *node = malloc(sizeof(ASTNode));
+    node->type = NODE_ARG_LIST;
+    node->arg_list.args = NULL;
+    node->arg_list.count = 0;
+    return node;
+}
+
+void add_arg_to_list(ASTNode *list, ASTNode *arg) {
+    list->arg_list.count++;
+    list->arg_list.args = realloc(list->arg_list.args, (size_t)list->arg_list.count * sizeof(ASTNode*));
+    list->arg_list.args[list->arg_list.count - 1] = arg;
+}
+
 void free_ast(ASTNode *node) {
     if (node == NULL) return;
 
@@ -261,6 +317,24 @@ void free_ast(ASTNode *node) {
             break;
         case NODE_RETURN_STMT:
             free_ast(node->return_stmt.expr);
+            break;
+        case NODE_LENGTH_STMT:
+            free_ast(node->length_stmt.expr);
+            break;
+        case NODE_TYPEOF_STMT:
+            free_ast(node->typeof_stmt.expr);
+            break;
+        case NODE_ALLOC_STMT:
+            free_ast(node->alloc_stmt.size);
+            break;
+        case NODE_SIZEOF_STMT:
+            free(node->sizeof_stmt.type);
+            break;
+        case NODE_UNSAFE_STMT:
+            free_ast(node->unsafe_stmt.body);
+            break;
+        case NODE_DEALLOC_STMT:
+            free_ast(node->unsafe_stmt.body);
             break;
         default:
             printf("Unknown node type, skipping free operation.\n");
@@ -356,7 +430,7 @@ void print_ast(ASTNode *node, int indent) {
             }
             print_indent(indent + 1);
             printf("Body:\n");
-            print_ast(node->function_def.body, indent + 1);
+            print_ast(node->function_def.body, indent + 2);
             break;
         case NODE_PARAM_LIST:
             printf("ParamList:\n");
@@ -389,6 +463,41 @@ void print_ast(ASTNode *node, int indent) {
             print_indent(indent + 1);
             printf("Value:\n");
             print_ast(node->return_stmt.expr, indent + 2);
+            break;
+        case NODE_LENGTH_STMT:
+            printf("Length:\n");
+            print_indent(indent + 1);
+            printf("Value:\n");
+            print_ast(node->return_stmt.expr, indent + 2);
+            break;  
+        case NODE_TYPEOF_STMT:
+            printf("Typeof:\n");
+            print_indent(indent + 1);
+            printf("Expr:\n");
+            print_ast(node->typeof_stmt.expr, indent + 2);
+            break;
+        case NODE_ALLOC_STMT:
+            printf("Alloc:\n");
+            print_indent(indent + 1);
+            printf("Size:\n");
+            print_ast(node->alloc_stmt.size, indent + 2);
+            break;
+        case NODE_DEALLOC_STMT:
+            printf("Dealloc:\n");
+            print_indent(indent + 1);
+            printf("Pointer:\n");
+            print_ast(node->dealloc_stmt.pointer, indent + 2);
+            break;
+        case NODE_SIZEOF_STMT:
+            printf("Sizeof:\n");
+            print_indent(indent + 1);
+            printf("Type: %s\n", node->sizeof_stmt.type);
+            break;
+        case NODE_UNSAFE_STMT:
+            printf("Unsafe:\n");
+            print_indent(indent + 1);
+            printf("Body:\n");
+            print_ast(node->unsafe_stmt.body, indent + 2);
             break;
         default:
             print_indent(indent);

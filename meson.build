@@ -19,7 +19,6 @@ add_project_arguments(
   '-pedantic',
   '-Wvla',
   '-Wstrict-prototypes',
-  '-fno-strict-aliasing',
   language: 'c'
 )
 

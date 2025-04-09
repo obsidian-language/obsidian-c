@@ -21,7 +21,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up dependencies
+    - name: Set up dependencies (Linux/macOS)
+      if: runner.os == 'Linux' || runner.os == 'macOS'
       run: |
         if [ $RUNNER_OS == 'Linux' ]; then
           sudo apt-get update
@@ -29,9 +30,14 @@ jobs:
         elif [ $RUNNER_OS == 'macOS' ]; then
           brew update
           brew install gcc flex bison meson
-        elif [ $RUNNER_OS == 'Windows' ]; then
-          msys2_setup -y base-devel flex bison meson mingw-w64-x86_64-gcc
         fi
+
+    - name: Set up dependencies (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        scoop install flex bison meson mingw
+        RefreshEnv
 
     - name: Bootstrap the build system
       run: |
