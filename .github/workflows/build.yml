@@ -40,11 +40,3 @@ jobs:
     - name: Build the project
       run: |
         meson compile -C build
-
-    - name: Cache dependencies
-      uses: actions/cache@v2
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-dependencies-${{ hashFiles('**/meson.build') }}
-        restore-keys: |
-          ${{ runner.os }}-dependencies-
