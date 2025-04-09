@@ -21,60 +21,30 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up dependencies (Linux)
-      if: runner.os == 'Linux'
+    - name: Set up dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y flex bison gcc python3-pip
+        if [ $RUNNER_OS == 'Linux' ]; then
+          sudo apt-get update
+          sudo apt-get install -y flex bison gcc meson
+        elif [ $RUNNER_OS == 'macOS' ]; then
+          brew update
+          brew install gcc flex bison meson
+        elif [ $RUNNER_OS == 'Windows' ]; then
+          msys2_setup -y base-devel flex bison meson mingw-w64-x86_64-gcc
+        fi
 
-    - name: Set up dependencies (Mac)
-      if: runner.os == 'macOS'
+    - name: Bootstrap the build system
       run: |
-        brew update
-        brew install gcc flex bison python
+        meson setup build
 
-    - name: Set up MSYS2 and dependencies (Windows)
-      if: runner.os == 'Windows'
-      uses: msys2/setup-msys2@v2
+    - name: Build the project
+      run: |
+        meson compile -C build
+
+    - name: Cache dependencies
+      uses: actions/cache@v2
       with:
-        msystem: MINGW64
-        install: >-
-          base-devel
-          flex
-          bison
-          python
-          python3-pip
-          mingw-w64-x86_64-gcc
-        update: true
-
-    - name: Bootstrap the build system (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        pip install -r requirements.txt
-
-    - name: Bootstrap the build system (Mac)
-      if: runner.os == 'macOS'
-      run: |
-        pip3 install -r requirements.txt --break-system-packages
-
-    - name: Bootstrap the build system (Windows)
-      if: runner.os == 'Windows'
-      shell: msys2 {0}
-      run: |
-        pip install -r requirements.txt --break-system-packages
-
-    - name: Build the project (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        ./boot
-
-    - name: Build the project (Mac)
-      if: runner.os == 'macOS'
-      run: |
-        ./boot --cc-flags=-Wno-implicit-function-declaration
-
-    - name: Build the project (Windows)
-      if: runner.os == 'Windows'
-      shell: msys2 {0}
-      run: |
-         ./boot
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-dependencies-${{ hashFiles('**/meson.build') }}
+        restore-keys: |
+          ${{ runner.os }}-dependencies-

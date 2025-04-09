@@ -43,7 +43,7 @@ void yyerror(const char *s) {
 
 %token LParen RParen LBrace RBrace LBracket RBracket Plus Minus Star Slash Dot Colon Semi Comma Not Greater Less Carot Percent Assign Ampersand Pipe Question XorNot Power LogicalAnd LogicalOr PlusAssign MinusAssign StarAssign SlashAssign Equal NotEqual GreaterEqual LessEqual Decrement Increment Xor RightShift LeftShift I8 I16 I32 I64 U8 U16 U32 U64 F32 F64 String Char Bool Void Const Fn If Else Switch Case Default While For Return Struct Enum New Null Alloc Dealloc Unsafe Sizeof Private Typeof Import Export Cast PrintLn Length Break
 
-%type <node> program statements statement expr declaration if_stmt assignment func_def param_list param whileStmt func_call
+%type <node> program statements statement expr if_stmt func_def param_list param while_stmt
 %type <strval> type
 
 %%
@@ -66,12 +66,10 @@ statements:
     };
 
 statement:
-    declaration Semi { $$ = $1; }
-    | expr Semi { $$ = $1; }
+    expr Semi { $$ = $1; }
     | if_stmt { $$ = $1; }
-    | assignment Semi { $$ = $1; }
     | func_def { $$ = $1; }
-    | whileStmt { $$ = $1; };
+    | while_stmt { $$ = $1; };
 
 type:
     I8  { $$ = strdup("i8"); }
@@ -88,12 +86,6 @@ type:
   | Char { $$ = strdup("char"); }
   | String { $$ = strdup("string"); }
   | Void { $$ = strdup("void"); };
-
-declaration:
-    type Ident Assign expr { $$ = create_var_decl_node($2, $1, $4); };
-
-assignment:
-    Ident Assign expr { $$ = create_assignment_node($1, $3); };
 
 expr:
     expr Plus expr { $$ = create_binary_node("+", $1, $3); }
@@ -132,10 +124,22 @@ expr:
     | CharLit { $$ = create_char_node($1); }
     | BoolLit { $$ = create_bool_node($1); }
     | Ident { $$ = create_variable_node($1); }
-    | func_call { $$ = $1; }
+    | PrintLn LParen expr RParen { $$ = create_println_node($3); } 
+    | Return expr { $$ = create_return_node($2); }
+    | Ident LParen param_list RParen {
+        ASTNode *paramListNode = $3;
+        int paramCount = paramListNode->param_list.count;
+        
+        ASTNode **args = malloc(sizeof(ASTNode*) * (size_t)paramCount);
+        for (int i = 0; i < paramCount; ++i) {
+            args[i] = paramListNode->param_list.params[i];
+        }
+        $$ = create_function_call_node($1, args, paramCount); };
+    | Ident Assign expr { $$ = create_assignment_node($1, $3); };
+    | type Ident Assign expr { $$ = create_var_decl_node($2, $1, $4); };
 
-if_stmt
-    : If LParen expr RParen LBrace statements RBrace { $$ = create_if_statement_node($3, $6, NULL); }
+if_stmt: 
+    If LParen expr RParen LBrace statements RBrace { $$ = create_if_statement_node($3, $6, NULL); }
     | If LParen expr RParen LBrace statements RBrace Else LBrace statements RBrace { $$ = create_if_statement_node($3, $6, $10); };
 
 param:
@@ -146,8 +150,8 @@ param_list:
     | param { $$ = create_param_list(); add_param_to_list($$, $1); }
     | param_list Comma param { add_param_to_list($1, $3); $$ = $1; };
 
-func_def
-    : Fn Ident LParen param_list RParen type LBrace statements RBrace {
+func_def: 
+    Fn Ident LParen param_list RParen type LBrace statements RBrace {
         ASTNode *paramListNode = $4;
         int paramCount = paramListNode->param_list.count;
         char **paramNames = malloc(sizeof(char*) * (size_t)paramCount);
@@ -157,23 +161,7 @@ func_def
             paramTypes[i] = strdup(paramListNode->param_list.params[i]->param.type);
         } $$ = create_function_decl_node($2, $6, paramNames, paramTypes, paramCount, $8); }
 
-whileStmt
-    : While LParen expr RParen LBrace statements RBrace { $$ = create_while_node($3, $6); };
-
-func_call:
-    Ident LParen param_list RParen {
-        ASTNode *paramListNode = $3;
-        int paramCount = paramListNode->param_list.count;
-        
-        // Extract the arguments into an array for the function call node
-        ASTNode **args = malloc(sizeof(ASTNode*) * (size_t)paramCount);
-        for (int i = 0; i < paramCount; ++i) {
-            args[i] = paramListNode->param_list.params[i];
-        }
-        
-        $$ = create_function_call_node($1, args, paramCount);
-    }
-    ;
-
+while_stmt: 
+    While LParen expr RParen LBrace statements RBrace { $$ = create_while_node($3, $6); };
 
 %%

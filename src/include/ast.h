@@ -23,6 +23,7 @@ typedef enum {
     NODE_PARAM,
     NODE_PARAM_LIST,
     NODE_WHILE,
+    NODE_PRINTLN,
 } NodeType;
 
 typedef struct ASTNode ASTNode;
@@ -78,7 +79,7 @@ struct ASTNode {
             char **param_types;
             int param_count;
             ASTNode *body;
-        } functionDef;
+        } function_def;
         struct {
             char *name;
             char *type;
@@ -90,7 +91,13 @@ struct ASTNode {
         struct {
             ASTNode *condition;
             ASTNode *body;
-        } whileStmt;
+        } while_stmt;
+        struct {
+            struct ASTNode *expr;
+        } println;
+        struct {
+            struct ASTNode *expr;
+        } return_stmt;
     };
 };
 
@@ -113,6 +120,8 @@ ASTNode *create_function_decl_node(char *name, char *return_type, char **param_n
 ASTNode *create_param_node(char *name, char *type);
 ASTNode *create_param_list(void);
 ASTNode *create_while_node(ASTNode *condition, ASTNode *body);
+ASTNode *create_println_node(ASTNode *expr);
+ASTNode *create_return_node(ASTNode *expr);
 void add_param_to_list(ASTNode *list, ASTNode *param);
 void free_ast(ASTNode *node);
 void print_ast(ASTNode *node, int indent);

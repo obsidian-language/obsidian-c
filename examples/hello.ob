@@ -1,3 +1,5 @@
-fn add(i32 x, i32 y) i32 {
-    i32 ans = x + y;
+fn main() i32 {
+    string x = "Hello, world";
+    println(x);
+    return 0;
 }

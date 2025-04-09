@@ -123,12 +123,12 @@ ASTNode *create_assignment_node(char *var_name, ASTNode *value) {
 ASTNode *create_function_decl_node(char *name, char *return_type, char **param_names, char **param_types, int param_count, ASTNode *body) {
     ASTNode *node = malloc(sizeof(ASTNode));
     node->type = NODE_FUNCTION_DEF;
-    node->functionDef.name = strdup(name);
-    node->functionDef.return_type = strdup(return_type);
-    node->functionDef.param_names = param_names;
-    node->functionDef.param_types = param_types;
-    node->functionDef.param_count = param_count;
-    node->functionDef.body = body;
+    node->function_def.name = strdup(name);
+    node->function_def.return_type = strdup(return_type);
+    node->function_def.param_names = param_names;
+    node->function_def.param_types = param_types;
+    node->function_def.param_count = param_count;
+    node->function_def.body = body;
     return node;
 }
 
@@ -160,8 +160,22 @@ void add_param_to_list(ASTNode *list, ASTNode *param) {
 ASTNode *create_while_node(ASTNode *condition, ASTNode *body) {
     ASTNode *node = malloc(sizeof(ASTNode));
     node->type = NODE_WHILE;
-    node->whileStmt.condition = condition;
-    node->whileStmt.body = body;
+    node->while_stmt.condition = condition;
+    node->while_stmt.body = body;
+    return node;
+}
+
+ASTNode *create_println_node(ASTNode *expr) {
+    ASTNode *node = malloc(sizeof(ASTNode));
+    node->type = NODE_PRINTLN;
+    node->println.expr = expr;
+    return node;
+}
+
+ASTNode *create_return_node(ASTNode *expr) {
+    ASTNode *node = malloc(sizeof(ASTNode));
+    node->type = NODE_RETURN_STMT;
+    node->return_stmt.expr = expr;
     return node;
 }
 
@@ -218,15 +232,15 @@ void free_ast(ASTNode *node) {
             free(node->variable.name);
             break;
         case NODE_FUNCTION_DEF:
-            free(node->functionDef.name);
-            free(node->functionDef.return_type);
-            for (int i = 0; i < node->functionDef.param_count; ++i) {
-                free(node->functionDef.param_names[i]);
-                free(node->functionDef.param_types[i]);
+            free(node->function_def.name);
+            free(node->function_def.return_type);
+            for (int i = 0; i < node->function_def.param_count; ++i) {
+                free(node->function_def.param_names[i]);
+                free(node->function_def.param_types[i]);
             }
-            free(node->functionDef.param_names);
-            free(node->functionDef.param_types);
-            free_ast(node->functionDef.body);
+            free(node->function_def.param_names);
+            free(node->function_def.param_types);
+            free_ast(node->function_def.body);
             break;
         case NODE_PARAM:
             free(node->param.name);
@@ -239,8 +253,14 @@ void free_ast(ASTNode *node) {
             free(node->param_list.params);
             break;
         case NODE_WHILE:
-            free_ast(node->whileStmt.condition);
-            free_ast(node->whileStmt.body);
+            free_ast(node->while_stmt.condition);
+            free_ast(node->while_stmt.body);
+            break;
+        case NODE_PRINTLN:
+            free_ast(node->println.expr);
+            break;
+        case NODE_RETURN_STMT:
+            free_ast(node->return_stmt.expr);
             break;
         default:
             printf("Unknown node type, skipping free operation.\n");
@@ -325,18 +345,18 @@ void print_ast(ASTNode *node, int indent) {
             print_ast(node->assignment.value, indent + 1);
             break;
         case NODE_FUNCTION_DEF:
-            printf("FunctionDef: %s\n", node->functionDef.name);
+            printf("function_def: %s\n", node->function_def.name);
             print_indent(indent + 1);
-            printf("Return Type: %s\n", node->functionDef.return_type);
+            printf("Return Type: %s\n", node->function_def.return_type);
             print_indent(indent + 1);
             printf("Parameters:\n");
-            for (int i = 0; i < node->functionDef.param_count; ++i) {
+            for (int i = 0; i < node->function_def.param_count; ++i) {
                 print_indent(indent + 1);
-                printf("  Param %d: %s %s\n", i + 1, node->functionDef.param_types[i], node->functionDef.param_names[i]);
+                printf("  Param %d: %s %s\n", i + 1, node->function_def.param_types[i], node->function_def.param_names[i]);
             }
             print_indent(indent + 1);
             printf("Body:\n");
-            print_ast(node->functionDef.body, indent + 1);
+            print_ast(node->function_def.body, indent + 1);
             break;
         case NODE_PARAM_LIST:
             printf("ParamList:\n");
@@ -353,10 +373,22 @@ void print_ast(ASTNode *node, int indent) {
             printf("WhileStatement:\n");
             print_indent(indent + 1);
             printf("Condition:\n");
-            print_ast(node->whileStmt.condition, indent + 2);
+            print_ast(node->while_stmt.condition, indent + 2);
             print_indent(indent + 1);
             printf("Body:\n");
-            print_ast(node->whileStmt.body, indent + 1);
+            print_ast(node->while_stmt.body, indent + 1);
+            break;
+        case NODE_PRINTLN:
+            printf("PrintLn:\n");
+            print_indent(indent + 1);
+            printf("Value:\n");
+            print_ast(node->println.expr, indent + 2);
+            break;
+        case NODE_RETURN_STMT:
+            printf("Return:\n");
+            print_indent(indent + 1);
+            printf("Value:\n");
+            print_ast(node->return_stmt.expr, indent + 2);
             break;
         default:
             print_indent(indent);
