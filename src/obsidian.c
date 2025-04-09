@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "include/ast.h"
-#include "parser.tab.h"
+#include "parser.h"
 #include "include/common.h"
 
 extern FILE *yyin;

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "include/ast.h"
+#include "ast.h"
 
 extern FILE *yyin;
 extern ASTNode *root;
@@ -43,13 +43,35 @@ void yyerror(const char *s) {
 
 %token LParen RParen LBrace RBrace LBracket RBracket Plus Minus Star Slash Dot Colon Semi Comma Not Greater Less Carot Percent Assign Ampersand Pipe Question XorNot Power LogicalAnd LogicalOr PlusAssign MinusAssign StarAssign SlashAssign Equal NotEqual GreaterEqual LessEqual Decrement Increment Xor RightShift LeftShift I8 I16 I32 I64 U8 U16 U32 U64 F32 F64 String Char Bool Void Const Fn If Else Switch Case Default While For Return Struct Enum New Null Alloc Dealloc Unsafe Sizeof Private Typeof Import Export Cast PrintLn Length Break
 
-%type <node> expr declaration
+%type <node> program statements statement expr declaration if_stmt assignment func_def param_list param whileStmt func_call
 %type <strval> type
 
 %%
 
 program:
-    declaration Semi { root = $1; };
+    statements { root = $1; }
+
+statements:
+    statement { 
+        ASTNode **stmts = malloc(sizeof(ASTNode*)); 
+        stmts[0] = $1;
+        $$ = create_statement_list_node(stmts, 1); 
+    }
+    | statements statement { 
+        size_t count = $1->statement_list.count + 1; 
+        $1->statement_list.statements = realloc($1->statement_list.statements, count * sizeof(ASTNode*)); 
+        $1->statement_list.statements[count - 1] = $2; 
+        $1->statement_list.count = count; 
+        $$ = $1; 
+    };
+
+statement:
+    declaration Semi { $$ = $1; }
+    | expr Semi { $$ = $1; }
+    | if_stmt { $$ = $1; }
+    | assignment Semi { $$ = $1; }
+    | func_def { $$ = $1; }
+    | whileStmt { $$ = $1; };
 
 type:
     I8  { $$ = strdup("i8"); }
@@ -69,6 +91,9 @@ type:
 
 declaration:
     type Ident Assign expr { $$ = create_var_decl_node($2, $1, $4); };
+
+assignment:
+    Ident Assign expr { $$ = create_assignment_node($1, $3); };
 
 expr:
     expr Plus expr { $$ = create_binary_node("+", $1, $3); }
@@ -102,9 +127,53 @@ expr:
     | Not expr { $$ = create_unary_node("!", $2); }
     | LParen expr RParen { $$ = $2; }
     | IntLit { $$ = create_int_node($1); }
-    | FloatLit { $$ = create_float_node($1); };
+    | FloatLit { $$ = create_float_node($1); }
     | StringLit { $$ = create_string_node($1); }
     | CharLit { $$ = create_char_node($1); }
     | BoolLit { $$ = create_bool_node($1); }
+    | Ident { $$ = create_variable_node($1); }
+    | func_call { $$ = $1; }
+
+if_stmt
+    : If LParen expr RParen LBrace statements RBrace { $$ = create_if_statement_node($3, $6, NULL); }
+    | If LParen expr RParen LBrace statements RBrace Else LBrace statements RBrace { $$ = create_if_statement_node($3, $6, $10); };
+
+param:
+    type Ident { $$ = create_param_node($2, $1); };
+
+param_list:
+    /* empty */ { $$ = create_param_list(); }
+    | param { $$ = create_param_list(); add_param_to_list($$, $1); }
+    | param_list Comma param { add_param_to_list($1, $3); $$ = $1; };
+
+func_def
+    : Fn Ident LParen param_list RParen type LBrace statements RBrace {
+        ASTNode *paramListNode = $4;
+        int paramCount = paramListNode->param_list.count;
+        char **paramNames = malloc(sizeof(char*) * (size_t)paramCount);
+        char **paramTypes = malloc(sizeof(char*) * (size_t)paramCount);
+        for (int i = 0; i < paramCount; ++i) {
+            paramNames[i] = strdup(paramListNode->param_list.params[i]->param.name);
+            paramTypes[i] = strdup(paramListNode->param_list.params[i]->param.type);
+        } $$ = create_function_decl_node($2, $6, paramNames, paramTypes, paramCount, $8); }
+
+whileStmt
+    : While LParen expr RParen LBrace statements RBrace { $$ = create_while_node($3, $6); };
+
+func_call:
+    Ident LParen param_list RParen {
+        ASTNode *paramListNode = $3;
+        int paramCount = paramListNode->param_list.count;
+        
+        // Extract the arguments into an array for the function call node
+        ASTNode **args = malloc(sizeof(ASTNode*) * (size_t)paramCount);
+        for (int i = 0; i < paramCount; ++i) {
+            args[i] = paramListNode->param_list.params[i];
+        }
+        
+        $$ = create_function_call_node($1, args, paramCount);
+    }
+    ;
+
 
 %%

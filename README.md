@@ -110,14 +110,11 @@ For full information on building Obsidian, see [Obsidian Building Guide](#). Her
 
 Before building Obsidian you may need to install some other tools and libraries. See, [Setting up your system for building Obsidian](#).
 
-**Quick start**: Obsidian is built using the [Make build system](#). The following gives you a default build:
+**Quick start**: Obsidian is built using the [Meson build system](#). The following gives you a default build:
 ```
-$ ./boot
-$ ./configure
-$ make
+$ meson setup build
+$ meson compile -C build
 ```
-
-The `./boot` step is only necessary if this is a tree checked out from git.
 
 ## Build Status
 

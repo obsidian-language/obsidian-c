@@ -28,3 +28,4 @@ Thumbs.db
 .deps/
 .vscode/
 latex/
+build/
