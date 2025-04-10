@@ -45,6 +45,7 @@ srcs = [
   'src/ast.c',
   'src/common.c',
   'src/obsidian.c',
+  'src/error.c',
   parser_c,
   lexer_c
 ]

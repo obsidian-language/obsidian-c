@@ -10,7 +10,7 @@
 
 ASTNode *create_int_node(int value) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_INT_LITERAL;
+    node->type = NodeIntLitExpr;
     node->intval = value;
     node->typeStr = strdup("i64");
     return node;
@@ -18,7 +18,7 @@ ASTNode *create_int_node(int value) {
 
 ASTNode *create_float_node(double value) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_FLOAT_LITERAL;
+    node->type = NodeFloatLitExpr;
     node->floatval = value;
     node->typeStr = strdup("f64");
     return node;
@@ -26,61 +26,61 @@ ASTNode *create_float_node(double value) {
 
 ASTNode *create_bool_node(int value) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_BOOL_LITERAL;
+    node->type = NodeBoolLitExpr;
     node->boolval = value;
     return node;
 }
 
 ASTNode *create_char_node(char value) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_CHAR_LITERAL;
+    node->type = NodeCharLitExpr;
     node->charval = value;
     return node;
 }
 
 ASTNode *create_string_node(char *value) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_STRING_LITERAL;
+    node->type = NodeStringLitExpr;
     node->strval = strdup(value);
     return node;
 }
 
 ASTNode *create_identifier_node(char *name) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_IDENTIFIER;
+    node->type = NodeIdentiferExpr;
     node->strval = strdup(name);
     return node;
 }
 
 ASTNode *create_binary_node(const char *op, ASTNode *left, ASTNode *right) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_BINARY_OP;
-    node->binary.op = op;
-    node->binary.left = left;
-    node->binary.right = right;
+    node->type = NodeBinaryExpr;
+    node->binary_expr.op = op;
+    node->binary_expr.left = left;
+    node->binary_expr.right = right;
     return node;
 }
 
 ASTNode *create_unary_node(const char *op, ASTNode *operand) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_UNARY_OP;
-    node->unary.op = op;
-    node->unary.operand = operand;
+    node->type = NodeUnaryExpr;
+    node->unary_expr.op = op;
+    node->unary_expr.operand = operand;
     return node;
 }
 
 ASTNode *create_function_call_node(char *func_name, ASTNode **args, int arg_count) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_FUNCTION_CALL;
-    node->function_call.func_name = strdup(func_name);
-    node->function_call.args = args;
-    node->function_call.arg_count = arg_count;
+    node->type = NodeFunctionCallStmt;
+    node->function_call_stmt.func_name = strdup(func_name);
+    node->function_call_stmt.args = args;
+    node->function_call_stmt.arg_count = arg_count;
     return node;
 }
 
 ASTNode *create_statement_list_node(ASTNode **statements, size_t count) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_STATEMENT_LIST;
+    node->type = NodeBlockStmt;
     node->statement_list.statements = statements;
     node->statement_list.count = count;
     return node;
@@ -88,17 +88,17 @@ ASTNode *create_statement_list_node(ASTNode **statements, size_t count) {
 
 ASTNode *create_var_decl_node(char *name, char *type, ASTNode *value) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_VAR_DECL;
-    node->var_decl.name = strdup(name);
-    node->var_decl.type = strdup(type);
-    node->var_decl.value = value;
+    node->type = NodeVarDeclStmt;
+    node->var_decl_stmt.name = strdup(name);
+    node->var_decl_stmt.type = strdup(type);
+    node->var_decl_stmt.value = value;
     node->typeStr = strdup(type);
     return node;
 }
 
 ASTNode* create_if_statement_node(ASTNode* condition, ASTNode* then_branch, ASTNode* else_branch) {
     ASTNode* node = malloc(sizeof(ASTNode));
-    node->type = NODE_IF_STATEMENT;
+    node->type = NodeIfStmt;
     node->if_stmt.condition = condition;
     node->if_stmt.then_branch = then_branch;
     node->if_stmt.else_branch = else_branch;
@@ -107,28 +107,28 @@ ASTNode* create_if_statement_node(ASTNode* condition, ASTNode* then_branch, ASTN
 
 ASTNode* create_variable_node(const char* name) {
     ASTNode* node = malloc(sizeof(ASTNode));
-    node->type = NODE_VAR;
+    node->type = NodeVarExpr;
     node->variable.name = strdup(name);
     return node;
 }
 
 ASTNode *create_assignment_node(char *var_name, ASTNode *value) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_ASSIGNMENT;
-    node->assignment.var_name = strdup(var_name);
-    node->assignment.value = value;
+    node->type = NodeAssignmentExpr;
+    node->assignment_expr.var_name = strdup(var_name);
+    node->assignment_expr.value = value;
     return node;
 }
 
 ASTNode *create_function_decl_node(char *name, char *return_type, char **param_names, char **param_types, int param_count, ASTNode *body) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_FUNCTION_DEF;
-    node->function_def.name = strdup(name);
-    node->function_def.return_type = strdup(return_type);
-    node->function_def.param_names = param_names;
-    node->function_def.param_types = param_types;
-    node->function_def.param_count = param_count;
-    node->function_def.body = body;
+    node->type = NodeFunctionDefStmt;
+    node->function_def_stmt.name = strdup(name);
+    node->function_def_stmt.return_type = strdup(return_type);
+    node->function_def_stmt.param_names = param_names;
+    node->function_def_stmt.param_types = param_types;
+    node->function_def_stmt.param_count = param_count;
+    node->function_def_stmt.body = body;
     return node;
 }
 
@@ -140,7 +140,7 @@ ASTNode *create_param_node(char *name, char *type) {
     return node;
 }
 
-ASTNode *create_param_list() {
+ASTNode *create_param_list(void) {
     ASTNode *node = malloc(sizeof(ASTNode));
     node->type = NODE_PARAM_LIST;
     node->param_list.params = NULL;
@@ -148,18 +148,9 @@ ASTNode *create_param_list() {
     return node;
 }
 
-void add_param_to_list(ASTNode *list, ASTNode *param) {
-    if (list->type != NODE_PARAM_LIST) {
-        fprintf(stderr, "Error: Trying to add parameter to a non-param list node.\n");
-        return;
-    }
-    list->param_list.params = realloc(list->param_list.params, sizeof(ASTNode *) * (size_t)(list->param_list.count + 1));
-    list->param_list.params[list->param_list.count++] = param;
-}
-
 ASTNode *create_while_node(ASTNode *condition, ASTNode *body) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_WHILE;
+    node->type = NodeWhileStmt;
     node->while_stmt.condition = condition;
     node->while_stmt.body = body;
     return node;
@@ -167,61 +158,61 @@ ASTNode *create_while_node(ASTNode *condition, ASTNode *body) {
 
 ASTNode *create_println_node(ASTNode *expr) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_PRINTLN;
-    node->println.expr = expr;
+    node->type = NodePrintLnExpr;
+    node->println_expr.expr = expr;
     return node;
 }
 
 ASTNode *create_return_node(ASTNode *expr) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_RETURN_STMT;
+    node->type = NodeReturnStmt;
     node->return_stmt.expr = expr;
     return node;
 }
 
 ASTNode *create_length_node(ASTNode *expr) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_LENGTH_STMT;
-    node->length_stmt.expr = expr;
+    node->type = NodeLengthExpr;
+    node->length_expr.expr = expr;
     return node;
 }
 
 ASTNode *create_typeof_node(ASTNode *expr) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_TYPEOF_STMT;
-    node->typeof_stmt.expr = expr;
+    node->type = NodeTypeOfExpr;
+    node->typeof_expr.expr = expr;
     return node;
 }
 
 ASTNode *create_alloc_node(ASTNode *size) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_ALLOC_STMT;
-    node->alloc_stmt.size = size;
+    node->type = NodeAllocExpr;
+    node->alloc_expr.size = size;
     return node;
 }
 
 ASTNode *create_dealloc_node(ASTNode *pointer) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_DEALLOC_STMT;
-    node->dealloc_stmt.pointer = pointer;
+    node->type = NodeDeallocExpr;
+    node->dealloc_expr.pointer = pointer;
     return node;
 }
 
 ASTNode *create_sizeof_node(char *type) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_SIZEOF_STMT;
-    node->sizeof_stmt.type = strdup(type);
+    node->type = NodeSizeOfExpr;
+    node->sizeof_expr.type = strdup(type);
     return node;
 }
 
 ASTNode *create_unsafe_node(ASTNode *body) {
     ASTNode *node = malloc(sizeof(ASTNode));
-    node->type = NODE_UNSAFE_STMT;
-    node->unsafe_stmt.body = body;
+    node->type = NodeUnsafeExpr;
+    node->unsafe_expr.body = body;
     return node;
 }
 
-ASTNode *create_arg_list() {
+ASTNode *create_arg_list(void) {
     ASTNode *node = malloc(sizeof(ASTNode));
     node->type = NODE_ARG_LIST;
     node->arg_list.args = NULL;
@@ -235,68 +226,82 @@ void add_arg_to_list(ASTNode *list, ASTNode *arg) {
     list->arg_list.args[list->arg_list.count - 1] = arg;
 }
 
+void add_param_to_list(ASTNode *list, ASTNode *param) {
+    if (list->type != NODE_PARAM_LIST) {
+        fprintf(stderr, "Error: Trying to add parameter to a non-param list node.\n");
+        return;
+    }
+    list->param_list.params = realloc(list->param_list.params, sizeof(ASTNode *) * (size_t)(list->param_list.count + 1));
+    list->param_list.params[list->param_list.count++] = param;
+}
+
+void print_indent(int indent) {
+    for (int i = 0; i < indent; ++i)
+        printf("    ");
+}
+
 void free_ast(ASTNode *node) {
     if (node == NULL) return;
 
     switch (node->type) {  
-        case NODE_INT_LITERAL:
-        case NODE_FLOAT_LITERAL:
-        case NODE_BOOL_LITERAL:
-        case NODE_CHAR_LITERAL:
+        case NodeIntLitExpr:
+        case NodeFloatLitExpr:
+        case NodeBoolLitExpr:
+        case NodeCharLitExpr:
             break;
-        case NODE_STRING_LITERAL:
+        case NodeStringLitExpr:
             free(node->strval);
             break;
-        case NODE_IDENTIFIER:
+        case NodeIdentiferExpr:
             free(node->strval);
             break;
-        case NODE_BINARY_OP:
-            free_ast(node->binary.left);
-            free_ast(node->binary.right);
+        case NodeBinaryExpr:
+            free_ast(node->binary_expr.left);
+            free_ast(node->binary_expr.right);
             break;
-        case NODE_UNARY_OP:
-            free_ast(node->unary.operand);
+        case NodeUnaryExpr:
+            free_ast(node->unary_expr.operand);
             break;
-        case NODE_FUNCTION_CALL:
-            free(node->function_call.func_name);
-            for (int i = 0; i < node->function_call.arg_count; ++i) {
-                free_ast(node->function_call.args[i]);
+        case NodeFunctionCallStmt:
+            free(node->function_call_stmt.func_name);
+            for (int i = 0; i < node->function_call_stmt.arg_count; ++i) {
+                free_ast(node->function_call_stmt.args[i]);
             }
-            free(node->function_call.args);
+            free(node->function_call_stmt.args);
             break;
-        case NODE_STATEMENT_LIST:
+        case NodeBlockStmt:
             for (size_t i = 0; i < node->statement_list.count; ++i) {
                 free_ast(node->statement_list.statements[i]);
             }
             free(node->statement_list.statements);
             break;
-        case NODE_VAR_DECL:
-            free(node->var_decl.name);
-            free(node->var_decl.type);
-            free_ast(node->var_decl.value);
+        case NodeVarDeclStmt:
+            free(node->var_decl_stmt.name);
+            free(node->var_decl_stmt.type);  // Add this line to free the strdup'd type string
+            free_ast(node->var_decl_stmt.value);
             break;
-        case NODE_ASSIGNMENT:
-            free(node->assignment.var_name);
-            free_ast(node->assignment.value);
+        case NodeAssignmentExpr:
+            free(node->assignment_expr.var_name);
+            free_ast(node->assignment_expr.value);
             break;
-        case NODE_IF_STATEMENT:
+        case NodeIfStmt:
             free_ast(node->if_stmt.condition);
             free_ast(node->if_stmt.then_branch);
             free_ast(node->if_stmt.else_branch);
             break;
-        case NODE_VAR:
+        case NodeVarExpr:
             free(node->variable.name);
             break;
-        case NODE_FUNCTION_DEF:
-            free(node->function_def.name);
-            free(node->function_def.return_type);
-            for (int i = 0; i < node->function_def.param_count; ++i) {
-                free(node->function_def.param_names[i]);
-                free(node->function_def.param_types[i]);
+        case NodeFunctionDefStmt:
+            free(node->function_def_stmt.name);
+            free(node->function_def_stmt.return_type);
+            for (int i = 0; i < node->function_def_stmt.param_count; ++i) {
+                free(node->function_def_stmt.param_names[i]);
+                free(node->function_def_stmt.param_types[i]);
             }
-            free(node->function_def.param_names);
-            free(node->function_def.param_types);
-            free_ast(node->function_def.body);
+            free(node->function_def_stmt.param_names);
+            free(node->function_def_stmt.param_types);
+            free_ast(node->function_def_stmt.body);
             break;
         case NODE_PARAM:
             free(node->param.name);
@@ -308,33 +313,33 @@ void free_ast(ASTNode *node) {
             }
             free(node->param_list.params);
             break;
-        case NODE_WHILE:
+        case NodeWhileStmt:
             free_ast(node->while_stmt.condition);
             free_ast(node->while_stmt.body);
             break;
-        case NODE_PRINTLN:
-            free_ast(node->println.expr);
+        case NodePrintLnExpr:
+            free_ast(node->println_expr.expr);
             break;
-        case NODE_RETURN_STMT:
+        case NodeReturnStmt:
             free_ast(node->return_stmt.expr);
             break;
-        case NODE_LENGTH_STMT:
-            free_ast(node->length_stmt.expr);
+        case NodeLengthExpr:
+            free_ast(node->length_expr.expr);
             break;
-        case NODE_TYPEOF_STMT:
-            free_ast(node->typeof_stmt.expr);
+        case NodeTypeOfExpr:
+            free_ast(node->typeof_expr.expr);
             break;
-        case NODE_ALLOC_STMT:
-            free_ast(node->alloc_stmt.size);
+        case NodeAllocExpr:
+            free_ast(node->alloc_expr.size);
             break;
-        case NODE_SIZEOF_STMT:
-            free(node->sizeof_stmt.type);
+        case NodeSizeOfExpr:
+            free(node->sizeof_expr.type);
             break;
-        case NODE_UNSAFE_STMT:
-            free_ast(node->unsafe_stmt.body);
+        case NodeUnsafeExpr:
+            free_ast(node->unsafe_expr.body);
             break;
-        case NODE_DEALLOC_STMT:
-            free_ast(node->unsafe_stmt.body);
+        case NodeDeallocExpr:
+            free_ast(node->dealloc_expr.pointer);
             break;
         default:
             printf("Unknown node type, skipping free operation.\n");
@@ -344,163 +349,183 @@ void free_ast(ASTNode *node) {
     free(node);
 }
 
-void print_indent(int indent) {
-    for (int i = 0; i < indent; ++i)
-        printf("  ");
-}
-
 void print_ast(ASTNode *node, int indent) {
     if (!node) return;
 
     print_indent(indent);
     switch (node->type) {
-        case NODE_INT_LITERAL:
+        case NodeIntLitExpr:
             printf("IntLiteral: %d\n", node->intval);
             break;
-        case NODE_FLOAT_LITERAL:
+        case NodeFloatLitExpr:
             printf("FloatLiteral: %f\n", node->floatval);
             break;
-        case NODE_BOOL_LITERAL:
+        case NodeBoolLitExpr:
             printf("BoolLiteral: %s\n", node->boolval ? "true" : "false");
             break;
-        case NODE_CHAR_LITERAL:
+        case NodeCharLitExpr:
             printf("CharLiteral: '%c'\n", node->charval);
             break;
-        case NODE_STRING_LITERAL:
+        case NodeStringLitExpr:
             printf("StringLiteral: %s\n", node->strval);
             break;
-        case NODE_IDENTIFIER:
+        case NodeIdentiferExpr:
             printf("Identifier: %s\n", node->strval);
             break;
-        case NODE_BINARY_OP:
-            printf("BinaryOp: '%s'\n", node->binary.op);
-            print_ast(node->binary.left, indent + 1);
-            print_ast(node->binary.right, indent + 1);
+        case NodeBinaryExpr:
+            printf("BinaryExpr: '%s' (", node->binary_expr.op);
+            print_ast_inline(node->binary_expr.left);
+            printf(", ");
+            print_ast_inline(node->binary_expr.right);
+            printf(")\n");
             break;
-        case NODE_UNARY_OP:
-            printf("UnaryOp: '%s'\n", node->unary.op);
-            print_ast(node->unary.operand, indent + 1);
+        case NodeUnaryExpr:
+            printf("UnaryExpr: '%s' (", node->unary_expr.op);
+            print_ast_inline(node->unary_expr.operand);
+            printf(")\n");
             break;
-        case NODE_FUNCTION_CALL:
-            printf("FunctionCall: %s\n", node->function_call.func_name);
-            for (int i = 0; i < node->function_call.arg_count; ++i) {
-                print_ast(node->function_call.args[i], indent + 1);
+        case NodeFunctionCallStmt:
+            printf("FunctionCall: %s(", node->function_call_stmt.func_name);
+            for (int i = 0; i < node->function_call_stmt.arg_count; ++i) {
+                if (i > 0) printf(", ");
+                print_ast_inline(node->function_call_stmt.args[i]);
             }
+            printf(")\n");
             break;
-        case NODE_STATEMENT_LIST:
-            printf("StatementList:\n");
+        case NodeBlockStmt:
+            printf("BlockStmt:\n");
             for (size_t i = 0; i < node->statement_list.count; ++i) {
                 print_ast(node->statement_list.statements[i], indent + 1);
             }
             break;
-        case NODE_VAR:
+        case NodeVarExpr:
             printf("Variable: %s\n", node->variable.name);
             break;
-        case NODE_VAR_DECL:
-            printf("VarDecl: name=%s, type=%s\n", node->var_decl.name, node->var_decl.type);
-            print_ast(node->var_decl.value, indent + 1);
+        case NodeVarDeclStmt:
+            printf("VarDecl: %s %s", node->var_decl_stmt.type, node->var_decl_stmt.name);
+            if (node->var_decl_stmt.value) {
+                printf(" = ");
+                print_ast_inline(node->var_decl_stmt.value);
+            }
+            printf("\n");
             break;
-        case NODE_IF_STATEMENT:
-            printf("IfStatement:\n");
+        case NodeIfStmt:
+            printf("If (");
+            print_ast_inline(node->if_stmt.condition);
+            printf(")\n");
             print_indent(indent + 1);
-            printf("Condition:\n");
-            print_ast(node->if_stmt.condition, indent + 2);
-            print_indent(indent + 1);
-            printf("ThenBranch:\n");
+            printf("Then:\n");
             print_ast(node->if_stmt.then_branch, indent + 2);
             if (node->if_stmt.else_branch) {
                 print_indent(indent + 1);
-                printf("ElseBranch:\n");
+                printf("Else:\n");
                 print_ast(node->if_stmt.else_branch, indent + 2);
             }
             break;
-        case NODE_ASSIGNMENT:
-            printf("Assignment: %s\n", node->assignment.var_name);
-            print_ast(node->assignment.value, indent + 1);
+        case NodeAssignmentExpr:
+            printf("Assignment: %s = ", node->assignment_expr.var_name);
+            print_ast_inline(node->assignment_expr.value);
+            printf("\n");
             break;
-        case NODE_FUNCTION_DEF:
-            printf("function_def: %s\n", node->function_def.name);
-            print_indent(indent + 1);
-            printf("Return Type: %s\n", node->function_def.return_type);
-            print_indent(indent + 1);
-            printf("Parameters:\n");
-            for (int i = 0; i < node->function_def.param_count; ++i) {
-                print_indent(indent + 1);
-                printf("  Param %d: %s %s\n", i + 1, node->function_def.param_types[i], node->function_def.param_names[i]);
-            }
-            print_indent(indent + 1);
-            printf("Body:\n");
-            print_ast(node->function_def.body, indent + 2);
+        case NodeFunctionDefStmt:
+            printf("FunctionDef: %s() -> %s\n", node->function_def_stmt.name, node->function_def_stmt.return_type);
+            print_ast(node->function_def_stmt.body, indent + 1);
             break;
-        case NODE_PARAM_LIST:
-            printf("ParamList:\n");
-            for (int i = 0; i < node->param_list.count; ++i) {
-                print_indent(indent + 1);
-                print_ast(node->param_list.params[i], indent + 1);
-            }
-            break;
-        case NODE_PARAM:
-            print_indent(indent + 1);
-            printf("Param: %s %s\n", node->param.type, node->param.name);
-            break;
-        case NODE_WHILE:
-            printf("WhileStatement:\n");
-            print_indent(indent + 1);
-            printf("Condition:\n");
-            print_ast(node->while_stmt.condition, indent + 2);
-            print_indent(indent + 1);
-            printf("Body:\n");
+        case NodeWhileStmt:
+            printf("While (");
+            print_ast_inline(node->while_stmt.condition);
+            printf(")\n");
             print_ast(node->while_stmt.body, indent + 1);
             break;
-        case NODE_PRINTLN:
-            printf("PrintLn:\n");
-            print_indent(indent + 1);
-            printf("Value:\n");
-            print_ast(node->println.expr, indent + 2);
+        case NodePrintLnExpr:
+            printf("PrintLn: ");
+            print_ast_inline(node->println_expr.expr);
+            printf("\n");
             break;
-        case NODE_RETURN_STMT:
-            printf("Return:\n");
-            print_indent(indent + 1);
-            printf("Value:\n");
-            print_ast(node->return_stmt.expr, indent + 2);
+        case NodeReturnStmt:
+            printf("Return: ");
+            print_ast_inline(node->return_stmt.expr);
+            printf("\n");
             break;
-        case NODE_LENGTH_STMT:
-            printf("Length:\n");
-            print_indent(indent + 1);
-            printf("Value:\n");
-            print_ast(node->return_stmt.expr, indent + 2);
-            break;  
-        case NODE_TYPEOF_STMT:
-            printf("Typeof:\n");
-            print_indent(indent + 1);
-            printf("Expr:\n");
-            print_ast(node->typeof_stmt.expr, indent + 2);
+        case NodeLengthExpr:
+            printf("Length: ");
+            print_ast_inline(node->length_expr.expr);
+            printf("\n");
             break;
-        case NODE_ALLOC_STMT:
-            printf("Alloc:\n");
-            print_indent(indent + 1);
-            printf("Size:\n");
-            print_ast(node->alloc_stmt.size, indent + 2);
+        case NodeTypeOfExpr:
+            printf("TypeOf: ");
+            print_ast_inline(node->typeof_expr.expr);
+            printf("\n");
             break;
-        case NODE_DEALLOC_STMT:
-            printf("Dealloc:\n");
-            print_indent(indent + 1);
-            printf("Pointer:\n");
-            print_ast(node->dealloc_stmt.pointer, indent + 2);
+        case NodeAllocExpr:
+            printf("Alloc(size = ");
+            print_ast_inline(node->alloc_expr.size);
+            printf(")\n");
             break;
-        case NODE_SIZEOF_STMT:
-            printf("Sizeof:\n");
-            print_indent(indent + 1);
-            printf("Type: %s\n", node->sizeof_stmt.type);
+        case NodeDeallocExpr:
+            printf("Dealloc: ");
+            print_ast_inline(node->dealloc_expr.pointer);
+            printf("\n");
             break;
-        case NODE_UNSAFE_STMT:
-            printf("Unsafe:\n");
-            print_indent(indent + 1);
-            printf("Body:\n");
-            print_ast(node->unsafe_stmt.body, indent + 2);
+        case NodeSizeOfExpr:
+            printf("Sizeof: %s\n", node->sizeof_expr.type);
+            break;
+        case NodeUnsafeExpr:
+            printf("UnsafeBlock:\n");
+            print_ast(node->unsafe_expr.body, indent + 1);
             break;
         default:
-            print_indent(indent);
             printf("Unknown node type!\n");
+    }
+}
+
+void print_ast_inline(ASTNode *node) {
+    if (!node) return;
+
+    switch (node->type) {
+        case NodeIntLitExpr:
+            printf("IntLiteral: %d", node->intval);
+            break;
+        case NodeVarExpr:
+            printf("Variable: %s", node->variable.name);
+            break;
+        case NodeSizeOfExpr:
+            printf("Sizeof: %s", node->sizeof_expr.type);
+            break;
+        case NodeBinaryExpr:
+            printf("BinaryExpr: '%s' (", node->binary_expr.op);
+            print_ast_inline(node->binary_expr.left);
+            printf(", ");
+            print_ast_inline(node->binary_expr.right);
+            printf(")");
+            break;
+        case NodeAllocExpr:
+            printf("Alloc(size = ");
+            print_ast_inline(node->alloc_expr.size);
+            printf(")");
+            break;
+        case NodeUnaryExpr:
+            printf("UnaryExpr: '%s' (", node->unary_expr.op);
+            print_ast_inline(node->unary_expr.operand);
+            printf(")");
+            break;
+        case NodeDeallocExpr:
+            printf("Dealloc: ");
+            print_ast_inline(node->dealloc_expr.pointer);
+            break;
+        case NodeAssignmentExpr:
+            printf("Assignment: %s = ", node->assignment_expr.var_name);
+            print_ast_inline(node->assignment_expr.value);
+            break;
+        case NodeLengthExpr:
+            printf("Length: ");
+            print_ast_inline(node->length_expr.expr);
+            break;
+        case NodeTypeOfExpr:
+            printf("TypeOf: ");
+            print_ast_inline(node->typeof_expr.expr);
+            break;
+        default:
+            print_ast(node, 0);
     }
 }

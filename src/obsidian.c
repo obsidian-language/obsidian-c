@@ -12,6 +12,7 @@
 
 extern FILE *yyin;
 extern ASTNode *root;
+extern const char *filename;
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
@@ -42,7 +43,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    const char *filename = argv[1];
+    filename = argv[1];
     FILE *file = fopen(filename, "r");
     if (!file) {
         fprintf(stderr, "obsidian: error: could not read file '%s'\n", filename);

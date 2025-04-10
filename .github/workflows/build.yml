@@ -54,8 +54,7 @@ jobs:
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        scoop install flex bison meson mingw
-        RefreshEnv
+        scoop install flex bison meson gcc
 
     - name: Bootstrap the build system
       run: |

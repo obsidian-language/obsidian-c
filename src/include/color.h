@@ -50,9 +50,9 @@ void set_color(int color);
     #define WHITE   "\x1b[0;37m"
     #define MAGENTA "\x1b[0;35m"
     #define RED     "\x1b[0;31m"
-    #define BLUE    "\x1b[0;34m"
+    #define BLUE    "\x1b[38;5;69m"
     #define BLACK   "\x1b[1;30m"
-    #define GRAY    "\x1b[1;90m"
+    #define GRAY    "\x1b[38;5;7m"
     #define RESET   "\x1b[0m"
 #endif
 

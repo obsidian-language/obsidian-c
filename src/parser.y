@@ -139,9 +139,9 @@ expr:
         for (int i = 0; i < argCount; ++i) {
             args[i] = argListNode->arg_list.args[i];
         } $$ = create_function_call_node($1, args, argCount); }
-    | Ident Assign expr { $$ = create_assignment_node($1, $3); };
+    | Ident Assign expr { $$ = create_assignment_node($1, $3); }
     | type Ident Assign expr { $$ = create_var_decl_node($2, $1, $4); }
-    | type Ident { $$ = create_var_decl_node($2, $1, NULL); };
+    | type Ident { $$ = create_var_decl_node($2, $1, NULL); }
 
 if_stmt: 
     If LParen expr RParen LBrace statements RBrace { $$ = create_if_statement_node($3, $6, NULL); }

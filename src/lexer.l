@@ -1,5 +1,9 @@
 %{
 #include "parser.h"
+#include "error.h"
+#include "color.h"
+int yycolumn = 1;
+const char *filename;
 %}
 
 %option noinput nounput
@@ -14,100 +18,122 @@ StringLiteral   \"(\\.|[^\\"])*\"
 
 %%
 
-"("                 { return LParen; }
-")"                 { return RParen; }
-"{"                 { return LBrace; }
-"}"                 { return RBrace; }
-"["                 { return LBracket; }
-"]"                 { return RBracket; }
-"+"                 { return Plus; }                 
-"-"                 { return Minus; }
-"*"                 { return Star; }
-"/"                 { return Slash; }
-"."                 { return Dot; }
-":"                 { return Colon; }
-";"                 { return Semi; }
-","                 { return Comma; }
-"!"                 { return Not; }
-">"                 { return Greater; }
-"<"                 { return Less; }
-"^"                 { return Carot; }
-"%"                 { return Percent; }
-"="                 { return Assign; }
-"&"                 { return Ampersand; }
-"|"                 { return Pipe; }
-"?"                 { return Question; }
-"~"                 { return XorNot; }
+"@".*               { /* Ignore single-line comments */ }
+"("                 { yycolumn += yyleng; return LParen; }
+")"                 { yycolumn += yyleng; return RParen; }
+"{"                 { yycolumn += yyleng; return LBrace; }
+"}"                 { yycolumn += yyleng; return RBrace; }
+"["                 { yycolumn += yyleng; return LBracket; }
+"]"                 { yycolumn += yyleng; return RBracket; }
+"+"                 { yycolumn += yyleng; return Plus; }                 
+"-"                 { yycolumn += yyleng; return Minus; }
+"*"                 { yycolumn += yyleng; return Star; }
+"/"                 { yycolumn += yyleng; return Slash; }
+"."                 { yycolumn += yyleng; return Dot; }
+":"                 { yycolumn += yyleng; return Colon; }
+";"                 { yycolumn += yyleng; return Semi; }
+","                 { yycolumn += yyleng; return Comma; }
+"!"                 { yycolumn += yyleng; return Not; }
+">"                 { yycolumn += yyleng; return Greater; }
+"<"                 { yycolumn += yyleng; return Less; }
+"^"                 { yycolumn += yyleng; return Carot; }
+"%"                 { yycolumn += yyleng; return Percent; }
+"="                 { yycolumn += yyleng; return Assign; }
+"&"                 { yycolumn += yyleng; return Ampersand; }
+"|"                 { yycolumn += yyleng; return Pipe; }
+"?"                 { yycolumn += yyleng; return Question; }
+"~"                 { yycolumn += yyleng; return XorNot; }
 
-"**"                { return Power; }
-"||"                { return LogicalOr; }
-"&&"                { return LogicalAnd; }
-"+="                { return PlusAssign; }
-"-="                { return MinusAssign; }
-"*="                { return StarAssign; }
-"/="                { return SlashAssign; }
-"=="                { return Equal; }
-"!="                { return NotEqual; }
-">="                { return GreaterEqual; }
-"<="                { return LessEqual; }
-"--"                { return Decrement; }
-"++"                { return Increment; }
-"^^"                { return Xor; }
-">>"                { return RightShift; }
-"<<"                { return LeftShift; }
+"**"                { yycolumn += yyleng; return Power; }
+"||"                { yycolumn += yyleng; return LogicalOr; }
+"&&"                { yycolumn += yyleng; return LogicalAnd; }
+"+="                { yycolumn += yyleng; return PlusAssign; }
+"-="                { yycolumn += yyleng; return MinusAssign; }
+"*="                { yycolumn += yyleng; return StarAssign; }
+"/="                { yycolumn += yyleng; return SlashAssign; }
+"=="                { yycolumn += yyleng; return Equal; }
+"!="                { yycolumn += yyleng; return NotEqual; }
+">="                { yycolumn += yyleng; return GreaterEqual; }
+"<="                { yycolumn += yyleng; return LessEqual; }
+"--"                { yycolumn += yyleng; return Decrement; }
+"++"                { yycolumn += yyleng; return Increment; }
+"^^"                { yycolumn += yyleng; return Xor; }
+">>"                { yycolumn += yyleng; return RightShift; }
+"<<"                { yycolumn += yyleng; return LeftShift; }
 
-"i8"                { return I8; }
-"i16"               { return I16; }
-"i32"               { return I32; }
-"i64"               { return I64; }
-"u8"                { return U8; }
-"u16"               { return U16; }
-"u32"               { return U32; }
-"u64"               { return U64; }
-"f32"               { return F32; }
-"f64"               { return F64; }
-"string"            { return String; }
-"char"              { return Char; }
-"bool"              { return Bool; }
-"void"              { return Void; }
+"i8"                { yycolumn += yyleng; return I8; }
+"i16"               { yycolumn += yyleng; return I16; }
+"i32"               { yycolumn += yyleng; return I32; }
+"i64"               { yycolumn += yyleng; return I64; }
+"u8"                { yycolumn += yyleng; return U8; }
+"u16"               { yycolumn += yyleng; return U16; }
+"u32"               { yycolumn += yyleng; return U32; }
+"u64"               { yycolumn += yyleng; return U64; }
+"f32"               { yycolumn += yyleng; return F32; }
+"f64"               { yycolumn += yyleng; return F64; }
+"string"            { yycolumn += yyleng; return String; }
+"char"              { yycolumn += yyleng; return Char; }
+"bool"              { yycolumn += yyleng; return Bool; }
+"void"              { yycolumn += yyleng; return Void; }
 
-"const"             { return Const; }
-"fn"                { return Fn; }
-"if"                { return If; }
-"else"              { return Else; }
-"switch"            { return Switch; }
-"case"              { return Case; }
-"default"           { return Default; }
-"while"             { return While; }
-"for"               { return For; }
-"return"            { return Return; }
-"struct"            { return Struct; }
-"enum"              { return Enum; }
-"new"               { return New; }
-"null"              { return Null; }
-"alloc"             { return Alloc; }
-"dealloc"           { return Dealloc; }
-"unsafe"            { return Unsafe; }
-"sizeof"            { return Sizeof; }
-"private"           { return Private; }
-"typeof"            { return Typeof; }
-"import"            { return Import; }
-"export"            { return Export; }
-"cast"              { return Cast; }
-"println"           { return PrintLn; }
-"length"            { return Length; }
-"break"             { return Break; }
+"const"             { yycolumn += yyleng; return Const; }
+"fn"                { yycolumn += yyleng; return Fn; }
+"if"                { yycolumn += yyleng; return If; }
+"else"              { yycolumn += yyleng; return Else; }
+"switch"            { yycolumn += yyleng; return Switch; }
+"case"              { yycolumn += yyleng; return Case; }
+"default"           { yycolumn += yyleng; return Default; }
+"while"             { yycolumn += yyleng; return While; }
+"for"               { yycolumn += yyleng; return For; }
+"return"            { yycolumn += yyleng; return Return; }
+"struct"            { yycolumn += yyleng; return Struct; }
+"enum"              { yycolumn += yyleng; return Enum; }
+"new"               { yycolumn += yyleng; return New; }
+"null"              { yycolumn += yyleng; return Null; }
+"alloc"             { yycolumn += yyleng; return Alloc; }
+"dealloc"           { yycolumn += yyleng; return Dealloc; }
+"unsafe"            { yycolumn += yyleng; return Unsafe; }
+"sizeof"            { yycolumn += yyleng; return Sizeof; }
+"private"           { yycolumn += yyleng; return Private; }
+"typeof"            { yycolumn += yyleng; return Typeof; }
+"import"            { yycolumn += yyleng; return Import; }
+"export"            { yycolumn += yyleng; return Export; }
+"cast"              { yycolumn += yyleng; return Cast; }
+"println"           { yycolumn += yyleng; return PrintLn; }
+"length"            { yycolumn += yyleng; return Length; }
+"break"             { yycolumn += yyleng; return Break; }
 
-"true"              { yylval.boolval = 1; return BoolLit; }
-"false"             { yylval.boolval = 0; return BoolLit; }
-{CharLiteral}       { yylval.charval = yytext[1]; return CharLit; }
-{StringLiteral}     { yylval.strval = strdup(yytext); return StringLit; }
-{IntLiteral}        { yylval.intval = atoi(yytext); return IntLit; }
-{FloatLiteral}      { yylval.floatval = strtof(yytext, NULL); return FloatLit; }
-{Identifier}        { yylval.strval = strdup(yytext); return Ident; }
+"true"              { yycolumn += yyleng; yylval.boolval = 1; return BoolLit; }
+"false"             { yycolumn += yyleng; yylval.boolval = 0; return BoolLit; }
+{CharLiteral}       { yycolumn += yyleng; yylval.charval = yytext[1]; return CharLit; }
+{StringLiteral}     { yycolumn += yyleng; yylval.strval = strdup(yytext); return StringLit; }
+{IntLiteral}        { yycolumn += yyleng; yylval.intval = atoi(yytext); return IntLit; }
+{FloatLiteral}      { yycolumn += yyleng; yylval.floatval = strtof(yytext, NULL); return FloatLit; }
+{Identifier}        { yycolumn += yyleng; yylval.strval = strdup(yytext); return Ident; }
 
-[ \t\r\n]+          { /* skip whitespace */ }
-.                   { printf("Unexpected character: %s\n", yytext); }
+[ \t\r]+            { yycolumn += yyleng; }
+\n                  { yycolumn = 1; yylineno++; }
+.                   {
+    printf(LIGHT_RED "error" GRAY ": " "Unexpected Character: '%s'\n", yytext);
+    printf(BLUE "  --> " GRAY "%s:%d:%d\n", filename, yylineno, yycolumn);
+    print_full_line(yyin, yylineno);
+
+    for (int i = 0; i < yycolumn + 5; i++) {
+        fputc(' ', stderr);
+    }
+
+    fputs(BLUE "|", stderr);
+    for (int i = yycolumn; i < yyleng + 4; i++) {
+        fputc(' ', stderr);
+    }
+    fputs(LIGHT_RED " ^", stderr);
+    fputc('\n', stderr);
+
+    yycolumn += yyleng;
+    puts(BLUE "   |" GRAY);
+    fprintf(stderr, "Compilation Failed. Exited at code: 1\n");
+    exit(1);
+}
 
 %%
 
