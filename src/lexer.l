@@ -12,7 +12,7 @@ Digit           [0-9]
 Letter          [a-zA-Z_]
 Identifier      {Letter}({Letter}|{Digit})*
 IntLiteral      {Digit}+
-FloatLiteral    {Digit}+"."{Digit}*
+FloatLiteral    ({Digit}+"."{Digit}*|{Digit}*"."{Digit}+)
 CharLiteral     \'(\\.|[^\\'])\'
 StringLiteral   \"(\\.|[^\\"])*\"
 
@@ -113,27 +113,7 @@ StringLiteral   \"(\\.|[^\\"])*\"
 
 [ \t\r]+            { yycolumn += yyleng; }
 \n                  { yycolumn = 1; yylineno++; }
-.                   {
-    printf(LIGHT_RED "error" GRAY ": " "Unexpected Character: '%s'\n", yytext);
-    printf(BLUE "  --> " GRAY "%s:%d:%d\n", filename, yylineno, yycolumn);
-    print_full_line(yyin, yylineno);
-
-    for (int i = 0; i < yycolumn + 5; i++) {
-        fputc(' ', stderr);
-    }
-
-    fputs(BLUE "|", stderr);
-    for (int i = yycolumn; i < yyleng + 4; i++) {
-        fputc(' ', stderr);
-    }
-    fputs(LIGHT_RED " ^", stderr);
-    fputc('\n', stderr);
-
-    yycolumn += yyleng;
-    puts(BLUE "   |" GRAY);
-    fprintf(stderr, "Compilation Failed. Exited at code: 1\n");
-    exit(1);
-}
+.                   { report_error("Unexpected Character", yytext); }
 
 %%
 
