@@ -1,4 +1,11 @@
-fn main() i32 {
-    string x = "Hello" + "Hello";
-    return 0;
+fn arcsin(f32 x, i32 terms) f32 {
+    if (x < -1.0 || x > 1.0) {
+        println("Error: arcsin(x) is undefined for x < -1");
+    }
+    f32 arsin = 0.0;
+    for (i32 n = 0; n < terms; n++) {
+        i32 exp = 2 * n + 1;
+        arsin += (factorial(2 * n) * pow(x, exp)) / (pow(4.0, n) * pow(factorial(n), 2) * cast(exp, f32));
+    }
+    return arsin;
 }
