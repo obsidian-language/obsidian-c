@@ -25,7 +25,7 @@ StringLiteral   \"(\\.|[^\\"])*\"
 "}"                 { yycolumn += yyleng; return RBrace; }
 "["                 { yycolumn += yyleng; return LBracket; }
 "]"                 { yycolumn += yyleng; return RBracket; }
-"+"                 { yycolumn += yyleng; return Plus; }                 
+"+"                 { yycolumn += yyleng; return Plus; }
 "-"                 { yycolumn += yyleng; return Minus; }
 "*"                 { yycolumn += yyleng; return Star; }
 "/"                 { yycolumn += yyleng; return Slash; }
@@ -113,7 +113,9 @@ StringLiteral   \"(\\.|[^\\"])*\"
 
 [ \t\r]+            { yycolumn += yyleng; }
 \n                  { yycolumn = 1; yylineno++; }
-.                   { report_error("Unexpected Character", yytext); }
+\'[^']*$            { report_error("Unterminated char literal"); }
+\"[^\"\n]*$         { report_error("Unterminated string literal"); }
+.                   { report_error("Unexpected Character"); }
 
 %%
 

@@ -1,5 +1,6 @@
 #include "include/error.h"
 #include "include/color.h"
+#include <stdio.h>
 #include <stdlib.h>
 
 extern int yylineno;
@@ -24,16 +25,18 @@ void print_full_line(FILE *file, int line_number) {
     }
 }
 
-void report_error(const char* message, const char* text) {
-    printf(LIGHT_RED "error" GRAY ": %s: '%s'\n", message, text);
+void report_error(const char* message) {
+    printf(LIGHT_RED "error" GRAY ": %s\n", message);    
     printf(BLUE "  --> " GRAY "%s:%d:%d\n", filename, yylineno, yycolumn);
+    
     print_full_line(yyin, yylineno);
 
-    fputs(BLUE "   |", stderr);
-    for (int i = 0; i < yycolumn + 2; i++) fputc(' ', stderr);
-    fputs(LIGHT_RED " ^\n", stderr);
+    printf(BLUE "   |");
+    for (int i = 0; i < yycolumn + 2; i++) fputc(' ', stdout);
+    fputs(LIGHT_RED " ^\n", stdout);
 
-    puts(BLUE "   |" GRAY);
-    fprintf(stderr, "Compilation Failed. Exited at code: 1\n");
+
+    printf(BLUE "   |\n");
+    printf(GRAY "Compilation Failed. Exited at code: 1\n");
     exit(1);
 }

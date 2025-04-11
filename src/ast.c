@@ -86,6 +86,16 @@ ASTNode *create_statement_list_node(ASTNode **statements, size_t count) {
     return node;
 }
 
+ASTNode* create_for_node(ASTNode* init, ASTNode* condition, ASTNode* increment, ASTNode* body) {
+    ASTNode* node = malloc(sizeof(ASTNode));
+    node->type = NodeForStmt;
+    node->for_loop_stmt.init = init;
+    node->for_loop_stmt.condition = condition;
+    node->for_loop_stmt.increment = increment;
+    node->for_loop_stmt.body = body;
+    return node;
+}
+
 ASTNode *create_var_decl_node(char *name, char *type, ASTNode *value) {
     ASTNode *node = malloc(sizeof(ASTNode));
     node->type = NodeVarDeclStmt;
@@ -220,6 +230,14 @@ ASTNode *create_arg_list(void) {
     return node;
 }
 
+ASTNode *create_cast_node(ASTNode *expr, char *type) {
+    ASTNode *node = malloc(sizeof(ASTNode));
+    node->type = NodeCastExpr;
+    node->cast_expr.expr = expr;
+    node->cast_expr.type = type;
+    return node;
+}
+
 void add_arg_to_list(ASTNode *list, ASTNode *arg) {
     list->arg_list.count++;
     list->arg_list.args = realloc(list->arg_list.args, (size_t)list->arg_list.count * sizeof(ASTNode*));
@@ -340,6 +358,16 @@ void free_ast(ASTNode *node) {
             break;
         case NodeDeallocExpr:
             free_ast(node->dealloc_expr.pointer);
+            break;
+        case NodeForStmt:
+            free_ast(node->for_loop_stmt.init);
+            free_ast(node->for_loop_stmt.body);
+            free_ast(node->for_loop_stmt.condition);
+            free_ast(node->for_loop_stmt.increment);
+            break;
+        case NodeCastExpr:
+            free_ast(node->cast_expr.expr);
+            free(node->cast_expr.type);
             break;
         default:
             printf("Unknown node type, skipping free operation.\n");
@@ -473,6 +501,25 @@ void print_ast(ASTNode *node, int indent) {
         case NodeUnsafeExpr:
             printf("UnsafeBlock:\n");
             print_ast(node->unsafe_expr.body, indent + 1);
+            break;
+        case NodeForStmt:
+            printf("For (");
+            print_ast_inline(node->for_loop_stmt.init);
+            printf("; ");
+            print_ast_inline(node->for_loop_stmt.condition);
+            printf("; ");
+            print_ast_inline(node->for_loop_stmt.increment);
+            printf(")\n");
+            print_ast(node->for_loop_stmt.body, indent + 1);
+            break;
+        case NodeCastExpr:
+            printf("Cast:\n");
+            print_indent(indent + 1);
+            printf("Expression: ");
+            print_ast_inline(node->cast_expr.expr);
+            printf("\n");
+            print_indent(indent + 1);
+            printf("Type: %s\n", node->cast_expr.type);
             break;
         default:
             printf("Unknown node type!\n");

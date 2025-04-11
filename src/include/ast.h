@@ -25,6 +25,7 @@ typedef enum {
     NodeDeallocExpr,
     NodeSizeOfExpr,
     NodeUnsafeExpr,
+    NodeCastExpr,
 
     NodeFunctionCallStmt,
     NodeBlockStmt,
@@ -33,6 +34,7 @@ typedef enum {
     NodeVarDeclStmt,
     NodeIfStmt,
     NodeWhileStmt,
+    NodeForStmt,
 } NodeType;
 
 typedef struct ASTNode ASTNode;
@@ -82,6 +84,10 @@ struct ASTNode {
             ASTNode *body;
         } unsafe_expr;
         struct {
+            ASTNode *expr;
+            char *type;
+        } cast_expr;
+        struct {
             char *name;
         } variable;
         struct {
@@ -118,6 +124,12 @@ struct ASTNode {
             char *type;
             ASTNode *value;
         } var_decl_stmt;
+        struct {
+            ASTNode *init;
+            ASTNode *condition;
+            ASTNode *increment;
+            ASTNode *body;
+        } for_loop_stmt;
         struct {
             char *name;
             char *type;
@@ -157,7 +169,9 @@ ASTNode *create_statement_list_node(ASTNode **statements, size_t count);
 ASTNode *create_function_call_node(char *func_name, ASTNode **args, int arg_count);
 ASTNode *create_function_decl_node(char *name, char *return_type, char **param_names, char **param_types, int param_count, ASTNode *body);
 ASTNode *create_var_decl_node(char *name, char *type, ASTNode *value);
+ASTNode* create_for_node(ASTNode* init, ASTNode* condition, ASTNode* increment, ASTNode* body);
 ASTNode *create_param_node(char *name, char *type);
+ASTNode *create_cast_node(ASTNode *expr, char *type);
 ASTNode *create_param_list(void);
 ASTNode *create_arg_list(void);
 void add_arg_to_list(ASTNode *list, ASTNode *arg);

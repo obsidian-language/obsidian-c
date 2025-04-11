@@ -1,4 +1,4 @@
 fn main() i32 {
-    i32 n;
-    i32 ptr = alloc(n * sizeof(i32));$
+    string x = "Hello" + "Hello";
+    return 0;
 }
